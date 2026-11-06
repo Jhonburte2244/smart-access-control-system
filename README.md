@@ -364,39 +364,49 @@ http://127.0.0.1:8000/
 | `/settings/` | System settings |
 | `/face-recognition/` | Face recognition |
 
-## 12. Screenshots
+## 12. Application Screenshots
 
-Screenshots will be added to demonstrate the actual application interface.
+The following screenshots demonstrate the actual Smart Access Control System (SACS) interface and its main management modules.
 
-Suggested screenshots:
+### 12.1 Dashboard
 
-| Screenshot | Description |
-|---|---|
-| Dashboard | Main system overview |
-| Employee Management | Employee records |
-| Door Management | Registered doors |
-| Access Control | Access rules and permissions |
-| RFID Management | RFID card records |
-| Fingerprint Management | Fingerprint records |
-| Face Recognition | Face-recognition interface |
-| Attendance | Attendance records |
-| Access Logs | Access event history |
-| Incidents | Security incident management |
-| Notifications | Notification interface |
+![SACS Dashboard](docs/images/dashboard.png)
 
-Planned image directory:
+### 12.2 Employee Management
 
-```text
-docs/
-└── images/
-    ├── dashboard.png
-    ├── employees.png
-    ├── access-control.png
-    ├── attendance.png
-    ├── access-logs.png
-    └── incidents.png
-```
+![Employee Management](docs/images/employees.png)
 
+### 12.3 Access Control
+
+![Access Control](docs/images/access-control.png)
+
+### 12.4 Attendance Management
+
+![Attendance Management](docs/images/attendance.png)
+
+### 12.5 RFID Card Management
+
+![RFID Card Management](docs/images/rfid-cards.png)
+
+### 12.6 Fingerprint Management
+
+![Fingerprint Management](docs/images/fingerprints.png)
+
+### 12.7 Device Management
+
+![Device Management](docs/images/devices.png)
+
+### 12.8 Door Management
+
+![Door Management](docs/images/doors.png)
+
+### 12.9 Incident Management
+
+![Incident Management](docs/images/incidents.png)
+
+### 12.10 Notification Management
+
+![Notification Management](docs/images/notifications.png)
 ## 13. Security Considerations
 
 - Store secret keys and database passwords in environment variables.
