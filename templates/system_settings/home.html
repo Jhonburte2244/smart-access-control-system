@@ -1,0 +1,198 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Settings | Smart Access Control System
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1">System Settings</h2>
+        <p class="text-muted mb-0">
+            Configure and manage Smart Access Control System settings.
+        </p>
+    </div>
+
+
+    <div class="row g-4">
+
+        <!-- General -->
+
+        <div class="col-xl-4 col-md-6">
+            <a href="{% url 'system_settings:general' %}"
+               class="text-decoration-none">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body p-4">
+
+                        <i class="bi bi-gear fs-1 text-primary"></i>
+
+                        <h5 class="fw-bold mt-3">
+                            General
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Configure system name, organization,
+                            location and regional settings.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </a>
+        </div>
+
+
+        <!-- Security -->
+
+        <div class="col-xl-4 col-md-6">
+            <a href="{% url 'system_settings:security' %}"
+               class="text-decoration-none">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body p-4">
+
+                        <i class="bi bi-shield-lock fs-1 text-danger"></i>
+
+                        <h5 class="fw-bold mt-3">
+                            Security
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Configure login security, sessions,
+                            audit and security policies.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </a>
+        </div>
+
+
+        <!-- Access Control -->
+
+        <div class="col-xl-4 col-md-6">
+            <a href="{% url 'system_settings:access_control' %}"
+               class="text-decoration-none">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body p-4">
+
+                        <i class="bi bi-door-open fs-1 text-success"></i>
+
+                        <h5 class="fw-bold mt-3">
+                            Access Control
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Configure door access, unlock duration
+                            and access policies.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </a>
+        </div>
+
+
+        <!-- Biometric -->
+
+        <div class="col-xl-4 col-md-6">
+            <a href="{% url 'system_settings:biometric' %}"
+               class="text-decoration-none">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body p-4">
+
+                        <i class="bi bi-fingerprint fs-1 text-info"></i>
+
+                        <h5 class="fw-bold mt-3">
+                            Biometric
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Configure fingerprint, face and
+                            RFID authentication.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </a>
+        </div>
+
+
+        <!-- Devices -->
+
+        <div class="col-xl-4 col-md-6">
+            <a href="{% url 'system_settings:devices' %}"
+               class="text-decoration-none">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body p-4">
+
+                        <i class="bi bi-cpu fs-1 text-warning"></i>
+
+                        <h5 class="fw-bold mt-3">
+                            Devices
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Configure device monitoring,
+                            heartbeat and communication settings.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </a>
+        </div>
+
+
+        <!-- Notifications -->
+
+        <div class="col-xl-4 col-md-6">
+            <a href="{% url 'system_settings:notifications' %}"
+               class="text-decoration-none">
+
+                <div class="card shadow-sm border-0 h-100">
+
+                    <div class="card-body p-4">
+
+                        <i class="bi bi-bell fs-1 text-secondary"></i>
+
+                        <h5 class="fw-bold mt-3">
+                            Notifications
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Configure security alerts,
+                            incidents and system notifications.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,417 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Device Settings | Smart Access Control System
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                Device Settings
+            </h2>
+
+            <p class="text-muted mb-0">
+                Configure communication and operational settings for
+                Smart Access Control devices.
+            </p>
+        </div>
+
+        <a href="{% url 'system_settings:home' %}"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Settings
+
+        </a>
+
+    </div>
+
+
+    <form method="post">
+
+        {% csrf_token %}
+
+
+        <!-- Device System Status -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-cpu text-primary me-2"></i>
+                    Device System Status
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="devices_enabled"
+                        id="devices_enabled"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="devices_enabled">
+
+                        Enable Device Communication
+
+                    </label>
+
+                    <div class="form-text">
+                        Enable communication between the SMAC server
+                        and registered access-control devices.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Device Communication -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-wifi text-success me-2"></i>
+                    Device Communication
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="connection_timeout"
+                            class="form-label fw-semibold">
+
+                            Connection Timeout (seconds)
+
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="connection_timeout"
+                            id="connection_timeout"
+                            value="10"
+                            min="1"
+                            max="120"
+                        >
+
+                        <div class="form-text">
+                            Maximum time allowed when communicating
+                            with a registered device.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="heartbeat_interval"
+                            class="form-label fw-semibold">
+
+                            Device Heartbeat Interval (seconds)
+
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="heartbeat_interval"
+                            id="heartbeat_interval"
+                            value="30"
+                            min="5"
+                            max="300"
+                        >
+
+                        <div class="form-text">
+                            How frequently devices should report their
+                            operational status to the server.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Device Monitoring -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-activity text-info me-2"></i>
+                    Device Monitoring
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="device_monitoring"
+                        id="device_monitoring"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="device_monitoring">
+
+                        Enable Device Monitoring
+
+                    </label>
+
+                    <div class="form-text">
+                        Monitor the online/offline status of registered
+                        access-control devices.
+                    </div>
+
+                </div>
+
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="offline_notifications"
+                        id="offline_notifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="offline_notifications">
+
+                        Notify When Device Goes Offline
+
+                    </label>
+
+                    <div class="form-text">
+                        Generate a notification when a device stops
+                        communicating with the server.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Device Security -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-shield-lock text-danger me-2"></i>
+                    Device Security
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="require_registered_device"
+                        id="require_registered_device"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="require_registered_device">
+
+                        Allow Only Registered Devices
+
+                    </label>
+
+                    <div class="form-text">
+                        Only devices registered in the SMAC device
+                        management system may communicate with the server.
+                    </div>
+
+                </div>
+
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="reject_inactive_devices"
+                        id="reject_inactive_devices"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="reject_inactive_devices">
+
+                        Reject Inactive Devices
+
+                    </label>
+
+                    <div class="form-text">
+                        Prevent devices marked inactive from accessing
+                        the SMAC server.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ESP32 / API -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-hdd-network text-warning me-2"></i>
+                    Hardware API
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="api_enabled"
+                        id="api_enabled"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="api_enabled">
+
+                        Enable Device API
+
+                    </label>
+
+                    <div class="form-text">
+                        Allow registered ESP32 and other access-control
+                        devices to communicate with the SMAC backend API.
+                    </div>
+
+                </div>
+
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="api_logging"
+                        id="api_logging"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="api_logging">
+
+                        Log Device API Requests
+
+                    </label>
+
+                    <div class="form-text">
+                        Record device communication events for monitoring
+                        and auditing.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Information -->
+        <div class="alert alert-info shadow-sm">
+
+            <div class="d-flex">
+
+                <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+
+                <div>
+
+                    <strong>Device Integration</strong>
+
+                    <p class="mb-0 mt-1">
+                        These settings control registered SMAC devices,
+                        including ESP32-based access-control controllers.
+                        Device registration and individual device
+                        configuration remain available from the Devices
+                        management section.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Save -->
+        <div class="d-flex justify-content-end mb-4">
+
+            <button
+                type="submit"
+                class="btn btn-primary px-4">
+
+                <i class="bi bi-save me-1"></i>
+                Save Device Settings
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,297 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    {% if edit_mode %}
+        Edit Device
+    {% else %}
+        Register Device
+    {% endif %}
+    | Smart Access Control System
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-cpu me-2"></i>
+
+                {% if edit_mode %}
+                    Edit Device
+                {% else %}
+                    Register Device
+                {% endif %}
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                {% if edit_mode %}
+                    Update ESP32 device information
+                {% else %}
+                    Register an ESP32 access control device
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+        <a href="{% url 'devices:device_list' %}"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back
+
+        </a>
+
+    </div>
+
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-8 col-lg-10">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="mb-0 fw-bold">
+
+                        <i class="bi bi-cpu me-2"></i>
+
+                        Device Information
+
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body p-4">
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+
+                        <div class="row g-3">
+
+
+                            <!-- Device Code -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+
+                                    Device Code
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+                                <input type="text"
+                                       name="device_code"
+                                       class="form-control"
+                                       value="{{ device.device_code|default:'' }}"
+                                       placeholder="ESP32-001"
+                                       required>
+
+                                <small class="text-muted">
+                                    Unique identifier for this ESP32.
+                                </small>
+
+                            </div>
+
+
+                            <!-- Device Name -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+
+                                    Device Name
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+                                <input type="text"
+                                       name="device_name"
+                                       class="form-control"
+                                       value="{{ device.device_name|default:'' }}"
+                                       placeholder="Main Entrance Controller"
+                                       required>
+
+                            </div>
+
+
+                            <!-- Device Type -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Device Type
+                                </label>
+
+                                <select name="device_type"
+                                        class="form-select">
+
+                                    <option value="ESP32"
+                                        {% if not device or device.device_type == "ESP32" %}selected{% endif %}>
+                                        ESP32
+                                    </option>
+
+                                    <option value="ESP32-WROOM-32"
+                                        {% if device.device_type == "ESP32-WROOM-32" %}selected{% endif %}>
+                                        ESP32-WROOM-32
+                                    </option>
+
+                                    <option value="Other"
+                                        {% if device.device_type == "Other" %}selected{% endif %}>
+                                        Other
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- Location -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Location
+                                </label>
+
+                                <input type="text"
+                                       name="location"
+                                       class="form-control"
+                                       value="{{ device.location|default:'' }}"
+                                       placeholder="Main Entrance">
+
+                            </div>
+
+
+                            <!-- IP Address -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    IP Address
+                                </label>
+
+                                <input type="text"
+                                       name="ip_address"
+                                       class="form-control"
+                                       value="{{ device.ip_address|default:'' }}"
+                                       placeholder="192.168.1.100">
+
+                                <small class="text-muted">
+                                    Can be updated automatically by the ESP32 API.
+                                </small>
+
+                            </div>
+
+
+                            <!-- MAC Address -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    MAC Address
+                                </label>
+
+                                <input type="text"
+                                       name="mac_address"
+                                       class="form-control"
+                                       value="{{ device.mac_address|default:'' }}"
+                                       placeholder="AA:BB:CC:DD:EE:FF">
+
+                            </div>
+
+
+                            <!-- Firmware -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Firmware Version
+                                </label>
+
+                                <input type="text"
+                                       name="firmware_version"
+                                       class="form-control"
+                                       value="{{ device.firmware_version|default:'' }}"
+                                       placeholder="SACS-1.0.0">
+
+                            </div>
+
+
+                            <!-- Information -->
+
+                            <div class="col-12">
+
+                                <div class="alert alert-info mb-0">
+
+                                    <i class="bi bi-info-circle me-2"></i>
+
+                                    <strong>Device API:</strong>
+
+                                    After registration, this device can communicate
+                                    with Django to report its status, fingerprint
+                                    authentication events, RFID events, and door
+                                    activity.
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <hr class="my-4">
+
+
+                        <div class="d-flex justify-content-end gap-2">
+
+                            <a href="{% url 'devices:device_list' %}"
+                               class="btn btn-outline-secondary">
+
+                                Cancel
+
+                            </a>
+
+
+                            <button type="submit"
+                                    class="btn btn-primary">
+
+                                <i class="bi bi-check-circle me-1"></i>
+
+                                {% if edit_mode %}
+                                    Update Device
+                                {% else %}
+                                    Register Device
+                                {% endif %}
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

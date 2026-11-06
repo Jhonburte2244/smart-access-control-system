@@ -1,0 +1,411 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Edit RFID Card
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-pencil-square me-2"></i>
+                Edit RFID Card
+            </h2>
+
+            <p class="text-muted mb-0">
+                Update RFID card information and assignment.
+            </p>
+        </div>
+
+        <a href="{% url 'rfid_cards:rfid_card_list' %}"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to RFID Cards
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         MESSAGES
+    ====================================================== -->
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                 role="alert">
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         EDIT FORM
+    ====================================================== -->
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="mb-0 fw-semibold">
+
+                <i class="bi bi-credit-card-2-front me-2"></i>
+
+                RFID Card Information
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <div class="row g-4">
+
+
+                    <!-- =================================================
+                         CARD UID
+                    ================================================== -->
+                    <div class="col-md-6">
+
+                        <label for="card_uid"
+                               class="form-label fw-semibold">
+
+                            Card UID
+                            <span class="text-danger">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="card_uid"
+                            name="card_uid"
+                            value="{{ card.card_uid }}"
+                            placeholder="Example: AB 34 23 CD"
+                            required
+                        >
+
+                        <div class="form-text">
+                            Unique UID read from the RFID card.
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         CARD NUMBER
+                    ================================================== -->
+                    <div class="col-md-6">
+
+                        <label for="card_number"
+                               class="form-label fw-semibold">
+
+                            Card Number
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="card_number"
+                            name="card_number"
+                            value="{{ card.card_number|default:'' }}"
+                            placeholder="Optional card number"
+                        >
+
+                        <div class="form-text">
+                            Optional card number.
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         EMPLOYEE
+                    ================================================== -->
+                    <div class="col-md-6">
+
+                        <label for="employee_id"
+                               class="form-label fw-semibold">
+
+                            Employee
+
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="employee_id"
+                            name="employee_id"
+                        >
+
+                            <option value="">
+                                -- Unassigned --
+                            </option>
+
+                            {% for employee in employees %}
+
+                                <option
+                                    value="{{ employee.id }}"
+                                    {% if card.employee_id == employee.id %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ employee.employee_number }}
+                                    -
+                                    {{ employee.first_name }}
+                                    {{ employee.middle_name|default:'' }}
+                                    {{ employee.last_name }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <div class="form-text">
+                            Select the employee who owns this RFID card.
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         CARD TYPE
+                    ================================================== -->
+                    <div class="col-md-6">
+
+                        <label for="card_type"
+                               class="form-label fw-semibold">
+
+                            Card Type
+
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="card_type"
+                            name="card_type"
+                        >
+
+                            <option value="RFID"
+                                {% if card.card_type == "RFID" %}
+                                    selected
+                                {% endif %}
+                            >
+                                RFID
+                            </option>
+
+                            <option value="MIFARE"
+                                {% if card.card_type == "MIFARE" %}
+                                    selected
+                                {% endif %}
+                            >
+                                MIFARE
+                            </option>
+
+                            <option value="NFC"
+                                {% if card.card_type == "NFC" %}
+                                    selected
+                                {% endif %}
+                            >
+                                NFC
+                            </option>
+
+                            <option value="Other"
+                                {% if card.card_type == "Other" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         EXPIRY DATE
+                    ================================================== -->
+                    <div class="col-md-6">
+
+                        <label for="expires_at"
+                               class="form-label fw-semibold">
+
+                            Expiry Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            class="form-control"
+                            id="expires_at"
+                            name="expires_at"
+                            value="{% if card.expires_at %}{{ card.expires_at|date:'Y-m-d' }}{% endif %}"
+                        >
+
+                        <div class="form-text">
+                            Leave empty if the card does not expire.
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         STATUS
+                    ================================================== -->
+                    <div class="col-md-6">
+
+                        <label for="status"
+                               class="form-label fw-semibold">
+
+                            Status
+
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="status"
+                            name="status"
+                        >
+
+                            <option value="active"
+                                {% if card.status|lower == "active" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Active
+                            </option>
+
+                            <option value="inactive"
+                                {% if card.status|lower == "inactive" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Inactive
+                            </option>
+
+                            <option value="blocked"
+                                {% if card.status|lower == "blocked" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Blocked
+                            </option>
+
+                            <option value="expired"
+                                {% if card.status|lower == "expired" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Expired
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =====================================================
+                     CARD INFORMATION
+                ====================================================== -->
+                <div class="alert alert-light border mt-4">
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <strong>Card ID:</strong>
+
+                            {{ card.id }}
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <strong>Issued:</strong>
+
+                            {{ card.issued_at|date:"Y-m-d H:i" }}
+
+                        </div>
+
+                        <div class="col-md-4">
+
+                            <strong>Created:</strong>
+
+                            {{ card.created_at|date:"Y-m-d H:i" }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =====================================================
+                     BUTTONS
+                ====================================================== -->
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+                    <a
+                        href="{% url 'rfid_cards:rfid_card_list' %}"
+                        class="btn btn-secondary"
+                    >
+
+                        <i class="bi bi-x-circle me-1"></i>
+
+                        Cancel
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bi bi-check-circle me-1"></i>
+
+                        Update RFID Card
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,1725 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+Dashboard | Smart Access Control System
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+.dashboard-header {
+    margin-bottom: 22px;
+}
+
+.dashboard-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #172033;
+    margin-bottom: 4px;
+    letter-spacing: -0.6px;
+}
+
+.dashboard-subtitle {
+    color: #64748b;
+    font-size: 13px;
+    margin: 0;
+}
+
+
+/* =========================================================
+   SYSTEM STATUS
+========================================================= */
+
+.system-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 13px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    color: #15803d;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.system-live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 4px rgba(34,197,94,.10);
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+.dashboard-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-bottom: 22px;
+}
+
+.dashboard-stat-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 130px;
+    padding: 18px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(15,23,42,.04);
+    transition: .2s ease;
+}
+
+.dashboard-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(15,23,42,.07);
+}
+
+.stat-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.stat-label {
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+}
+
+.stat-value {
+    color: #172033;
+    font-size: 27px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -.8px;
+}
+
+.stat-secondary {
+    margin-top: 9px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.stat-icon {
+    width: 43px;
+    height: 43px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.stat-blue {
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+.stat-purple {
+    color: #7c3aed;
+    background: #f5f3ff;
+}
+
+.stat-green {
+    color: #16a34a;
+    background: #f0fdf4;
+}
+
+.stat-orange {
+    color: #d97706;
+    background: #fffbeb;
+}
+
+.stat-cyan {
+    color: #0891b2;
+    background: #ecfeff;
+}
+
+
+/* =========================================================
+   GENERAL CARD
+========================================================= */
+
+.dashboard-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 15px;
+    box-shadow: 0 2px 8px rgba(15,23,42,.04);
+    overflow: hidden;
+}
+
+.dashboard-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px 18px;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.dashboard-card-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #172033;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.dashboard-card-title-icon {
+    width: 31px;
+    height: 31px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 14px;
+}
+
+.dashboard-card-body {
+    padding: 17px 18px;
+}
+
+
+/* =========================================================
+   QUICK ACCESS
+========================================================= */
+
+.quick-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 62px;
+    padding: 11px 12px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 11px;
+    color: #334155;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.quick-action:hover {
+    color: #2563eb;
+    background: #f8fbff;
+    border-color: #bfdbfe;
+    transform: translateY(-2px);
+}
+
+.quick-action-icon {
+    width: 37px;
+    height: 37px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 16px;
+}
+
+.quick-action-title {
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.quick-action-description {
+    margin-top: 2px;
+    color: #94a3b8;
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   DEVICE STATUS
+========================================================= */
+
+.device-summary {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 14px;
+}
+
+.device-summary-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.device-summary-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+}
+
+.device-online-dot {
+    background: #22c55e;
+}
+
+.device-offline-dot {
+    background: #ef4444;
+}
+
+.device-list {
+    border-top: 1px solid #f1f5f9;
+}
+
+.device-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 11px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.device-list-item:last-child {
+    border-bottom: 0;
+}
+
+.device-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.device-icon {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: #ecfeff;
+    color: #0891b2;
+    font-size: 15px;
+}
+
+.device-name {
+    color: #334155;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.device-code {
+    color: #94a3b8;
+    font-size: 9px;
+    margin-top: 2px;
+}
+
+.device-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 7px;
+    border-radius: 6px;
+    font-size: 9px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.device-status-online {
+    color: #15803d;
+    background: #f0fdf4;
+}
+
+.device-status-warning {
+    color: #a16207;
+    background: #fefce8;
+}
+
+.device-status-offline {
+    color: #b91c1c;
+    background: #fef2f2;
+}
+
+.device-status-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.dashboard-view-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 13px;
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.dashboard-view-link:hover {
+    color: #1d4ed8;
+}
+
+
+/* =========================================================
+   ATTENDANCE
+========================================================= */
+
+.attendance-list {
+    margin-top: 2px;
+}
+
+.attendance-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 13px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.attendance-row:last-child {
+    border-bottom: 0;
+}
+
+.attendance-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.attendance-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    font-size: 14px;
+}
+
+.attendance-value {
+    color: #172033;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.attendance-present {
+    color: #16a34a;
+    background: #f0fdf4;
+}
+
+.attendance-late {
+    color: #d97706;
+    background: #fffbeb;
+}
+
+.attendance-early {
+    color: #dc2626;
+    background: #fef2f2;
+}
+
+
+/* =========================================================
+   ACCESS LOGS
+========================================================= */
+
+.logs-table-wrapper {
+    overflow-x: auto;
+}
+
+.dashboard-logs-table {
+    width: 100%;
+    min-width: 700px;
+    margin: 0;
+}
+
+.dashboard-logs-table thead th {
+    padding: 11px 14px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+    color: #64748b;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    white-space: nowrap;
+}
+
+.dashboard-logs-table tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #475569;
+    font-size: 11px;
+    vertical-align: middle;
+}
+
+.dashboard-logs-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.dashboard-logs-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.employee-avatar {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 800;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   BADGES
+========================================================= */
+
+.authentication-badge,
+.access-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 7px;
+    border-radius: 6px;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.authentication-fingerprint {
+    color: #7c3aed;
+    background: #f5f3ff;
+}
+
+.authentication-rfid {
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+.authentication-face {
+    color: #0891b2;
+    background: #ecfeff;
+}
+
+.authentication-other {
+    color: #64748b;
+    background: #f8fafc;
+}
+
+.access-granted {
+    color: #15803d;
+    background: #f0fdf4;
+}
+
+.access-denied {
+    color: #b91c1c;
+    background: #fef2f2;
+}
+
+.access-other {
+    color: #475569;
+    background: #f1f5f9;
+}
+
+
+/* =========================================================
+   INCIDENTS AND NOTIFICATIONS
+========================================================= */
+
+.monitoring-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.monitoring-row:last-child {
+    border-bottom: 0;
+}
+
+.monitoring-title {
+    color: #334155;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.monitoring-meta {
+    margin-top: 4px;
+    color: #64748b;
+    font-size: 10px;
+}
+
+.monitoring-count {
+    font-size: 19px;
+    font-weight: 800;
+    color: #172033;
+}
+
+.monitoring-link {
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.monitoring-link:hover {
+    color: #1d4ed8;
+}
+
+.monitoring-message {
+    color: #475569;
+    font-size: 11px;
+    line-height: 1.5;
+    margin-top: 4px;
+    overflow-wrap: anywhere;
+}
+
+.monitoring-badge {
+    display: inline-block;
+    padding: 4px 7px;
+    border-radius: 6px;
+    font-size: 9px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.monitoring-danger {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.monitoring-warning {
+    background: #fffbeb;
+    color: #a16207;
+}
+
+.monitoring-success {
+    background: #f0fdf4;
+    color: #15803d;
+}
+
+.monitoring-neutral {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.dashboard-empty {
+    text-align: center;
+    padding: 30px 15px;
+    color: #94a3b8;
+}
+
+.dashboard-empty i {
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1400px) {
+
+    .dashboard-stat-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+@media (max-width: 992px) {
+
+    .dashboard-stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+
+    .system-live {
+        margin-top: 10px;
+    }
+
+    .dashboard-title {
+        font-size: 23px;
+    }
+
+    .dashboard-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-0">
+
+<!-- =====================================================
+     PAGE HEADER
+====================================================== -->
+
+<div class="dashboard-header d-flex justify-content-between align-items-center">
+
+    <div>
+
+        <h1 class="dashboard-title">
+            Dashboard
+        </h1>
+
+        <p class="dashboard-subtitle">
+            Smart Access Control System overview
+        </p>
+
+    </div>
+
+    <div class="system-live">
+
+        <span class="system-live-dot"></span>
+
+        Monitoring Active
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TOP STATISTICS
+====================================================== -->
+
+<div class="dashboard-stat-grid">
+
+
+    <!-- EMPLOYEES -->
+
+    <div class="dashboard-stat-card">
+
+        <div class="stat-top">
+
+            <div>
+
+                <div class="stat-label">
+                    Employees
+                </div>
+
+                <div class="stat-value">
+                    {{ total_employees|default:"0" }}
+                </div>
+
+                <div class="stat-secondary text-success">
+
+                    <i class="bi bi-check-circle-fill me-1"></i>
+
+                    {{ active_employees|default:"0" }} active
+
+                </div>
+
+            </div>
+
+            <div class="stat-icon stat-blue">
+
+                <i class="bi bi-people-fill"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DOORS -->
+
+    <div class="dashboard-stat-card">
+
+        <div class="stat-top">
+
+            <div>
+
+                <div class="stat-label">
+                    Doors
+                </div>
+
+                <div class="stat-value">
+                    {{ total_doors|default:"0" }}
+                </div>
+
+                <div class="stat-secondary text-success">
+
+                    <i class="bi bi-check-circle-fill me-1"></i>
+
+                    {{ active_doors|default:"0" }} active
+
+                </div>
+
+            </div>
+
+            <div class="stat-icon stat-purple">
+
+                <i class="bi bi-door-open-fill"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DEVICES -->
+
+    <div class="dashboard-stat-card">
+
+        <div class="stat-top">
+
+            <div>
+
+                <div class="stat-label">
+                    Devices
+                </div>
+
+                <div class="stat-value">
+                    {{ total_devices|default:"0" }}
+                </div>
+
+                <div class="stat-secondary text-success">
+
+                    <i class="bi bi-wifi me-1"></i>
+
+                    {{ active_devices|default:"0" }} active
+
+                </div>
+
+            </div>
+
+            <div class="stat-icon stat-cyan">
+
+                <i class="bi bi-cpu-fill"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PRESENT -->
+
+    <div class="dashboard-stat-card">
+
+        <div class="stat-top">
+
+            <div>
+
+                <div class="stat-label">
+                    Present
+                </div>
+
+                <div class="stat-value">
+                    {{ present_today|default:"0" }}
+                </div>
+
+                <div class="stat-secondary text-muted">
+
+                    <i class="bi bi-clock me-1"></i>
+
+                    {{ late_today|default:"0" }} late
+
+                </div>
+
+            </div>
+
+            <div class="stat-icon stat-green">
+
+                <i class="bi bi-person-check-fill"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACCESS -->
+
+    <div class="dashboard-stat-card">
+
+        <div class="stat-top">
+
+            <div>
+
+                <div class="stat-label">
+                    Access
+                </div>
+
+                <div class="stat-value">
+                    {{ total_access_today|default:"0" }}
+                </div>
+
+                <div class="stat-secondary text-success">
+
+                    <i class="bi bi-shield-check me-1"></i>
+
+                    {{ access_success_rate|default:"0" }}%
+
+                </div>
+
+            </div>
+
+            <div class="stat-icon stat-orange">
+
+                <i class="bi bi-shield-lock-fill"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     QUICK ACCESS
+====================================================== -->
+
+<div class="dashboard-card mb-4">
+
+    <div class="dashboard-card-header">
+
+        <div class="dashboard-card-title">
+
+            <div class="dashboard-card-title-icon">
+
+                <i class="bi bi-lightning-charge-fill"></i>
+
+            </div>
+
+            Quick Access
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-card-body">
+
+        <div class="row g-3">
+
+
+            <!-- EMPLOYEES -->
+
+            <div class="col-xl col-md-6">
+
+                <a href="{% url 'employees:employees' %}"
+                   class="quick-action">
+
+                    <div class="quick-action-icon">
+
+                        <i class="bi bi-people-fill"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="quick-action-title">
+                            Employees
+                        </div>
+
+                        <div class="quick-action-description">
+                            Manage employees
+                        </div>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right ms-auto text-muted"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- DEPARTMENTS -->
+
+            <div class="col-xl col-md-6">
+
+                <a href="{% url 'departments:department_list' %}"
+                   class="quick-action">
+
+                    <div class="quick-action-icon">
+
+                        <i class="bi bi-diagram-3-fill"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="quick-action-title">
+                            Departments
+                        </div>
+
+                        <div class="quick-action-description">
+                            Manage departments
+                        </div>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right ms-auto text-muted"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- DOORS -->
+
+            <div class="col-xl col-md-6">
+
+                <a href="{% url 'access_control:doors' %}"
+                   class="quick-action">
+
+                    <div class="quick-action-icon">
+
+                        <i class="bi bi-door-open-fill"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="quick-action-title">
+                            Doors
+                        </div>
+
+                        <div class="quick-action-description">
+                            Manage doors
+                        </div>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right ms-auto text-muted"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- DEVICES -->
+
+            <div class="col-xl col-md-6">
+
+                <a href="{% url 'devices:device_list' %}"
+                   class="quick-action">
+
+                    <div class="quick-action-icon">
+
+                        <i class="bi bi-cpu-fill"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="quick-action-title">
+                            Devices
+                        </div>
+
+                        <div class="quick-action-description">
+                            Manage devices
+                        </div>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right ms-auto text-muted"></i>
+
+                </a>
+
+            </div>
+
+
+            <!-- ATTENDANCE -->
+
+            <div class="col-xl col-md-6">
+
+                <a href="{% url 'attendance:attendance_list' %}"
+                   class="quick-action">
+
+                    <div class="quick-action-icon">
+
+                        <i class="bi bi-calendar2-check-fill"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div class="quick-action-title">
+                            Attendance
+                        </div>
+
+                        <div class="quick-action-description">
+                            View attendance
+                        </div>
+
+                    </div>
+
+                    <i class="bi bi-chevron-right ms-auto text-muted"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     INCIDENT MONITORING + NOTIFICATIONS
+====================================================== -->
+
+<div class="row g-3 mb-4">
+
+    <!-- INCIDENT MONITORING -->
+    <div class="col-xl-6">
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-header bg-transparent d-flex
+                        justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+                    Incident Monitoring
+                </h5>
+
+                <a href="{% url 'incidents:incident_list' %}"
+                   class="btn btn-outline-primary btn-sm">
+                    View All
+                </a>
+            </div>
+
+            <div class="card-body">
+
+                <!-- Incident statistics -->
+                <div class="row g-3 mb-4">
+
+                    <div class="col-6">
+                        <div class="p-3 rounded bg-light">
+                            <small class="text-muted">Total Incidents</small>
+                            <h4 class="mb-0">
+                                {{ total_incidents|default:"0" }}
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="p-3 rounded bg-danger bg-opacity-10">
+                            <small class="text-muted">Open Incidents</small>
+                            <h4 class="mb-0 text-danger">
+                                {{ open_incidents|default:"0" }}
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="p-3 rounded bg-warning bg-opacity-10">
+                            <small class="text-muted">Critical and Active</small>
+                            <h4 class="mb-0 text-warning">
+                                {{ critical_incidents|default:"0" }}
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="p-3 rounded bg-success bg-opacity-10">
+                            <small class="text-muted">Resolved</small>
+                            <h4 class="mb-0 text-success">
+                                {{ resolved_incidents|default:"0" }}
+                            </h4>
+                        </div>
+                    </div>
+
+                </div>
+
+                <h6 class="fw-bold mb-3">Recently Reported Incidents</h6>
+
+                {% for incident in recent_incidents %}
+                    <div class="d-flex justify-content-between
+                                align-items-center border-bottom py-3 gap-2">
+
+                        <div>
+                            <a class="fw-semibold text-decoration-none"
+                               href="{% url 'incidents:incident_detail' incident.pk %}">
+                                #{{ incident.pk }} —
+                                {{ incident.incident_type }}
+                            </a>
+
+                            <div class="small text-muted">
+                                {{ incident.reported_at|date:"M d, Y H:i" }}
+                            </div>
+                        </div>
+
+                        <span class="badge
+                            {% if incident.severity|lower == 'critical' %}
+                                bg-danger
+                            {% elif incident.severity|lower == 'high' %}
+                                bg-warning text-dark
+                            {% elif incident.severity|lower == 'medium' %}
+                                bg-info text-dark
+                            {% else %}
+                                bg-secondary
+                            {% endif %}">
+                            {{ incident.severity|title }}
+                        </span>
+
+                    </div>
+                {% empty %}
+                    <p class="text-muted text-center py-3 mb-0">
+                        No incidents recorded.
+                    </p>
+                {% endfor %}
+
+                <div class="mt-3">
+                    <a href="{% url 'incidents:incident_list' %}"
+                       class="text-decoration-none">
+                        Manage incidents
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- NOTIFICATIONS -->
+    <div class="col-xl-6">
+        <div class="card shadow-sm border-0 h-100">
+
+            <div class="card-header bg-transparent d-flex
+                        justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-bell-fill text-primary me-2"></i>
+                    Notifications
+
+                    {% if unread_notifications > 0 %}
+                        <span class="badge bg-danger ms-1">
+                            {{ unread_notifications }}
+                        </span>
+                    {% endif %}
+                </h5>
+
+                <a href="{% url 'notifications:notification_list' %}"
+                   class="btn btn-outline-primary btn-sm">
+                    View All
+                </a>
+            </div>
+
+            <div class="card-body">
+
+                <!-- Notification statistics -->
+                <div class="row g-3 mb-4">
+
+                    <div class="col-6">
+                        <div class="p-3 rounded bg-light">
+                            <small class="text-muted">Total Notifications</small>
+                            <h4 class="mb-0">
+                                {{ total_notifications|default:"0" }}
+                            </h4>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="p-3 rounded bg-primary bg-opacity-10">
+                            <small class="text-muted">Unread</small>
+                            <h4 class="mb-0 text-primary">
+                                {{ unread_notifications|default:"0" }}
+                            </h4>
+                        </div>
+                    </div>
+
+                </div>
+
+                <h6 class="fw-bold mb-3">Recent Notifications</h6>
+
+                {% for notification in recent_notifications %}
+                    <div class="d-flex justify-content-between
+                                align-items-start border-bottom py-3 gap-2">
+
+                        <div class="flex-grow-1">
+
+                            <a class="fw-semibold text-decoration-none"
+                               href="{% url 'notifications:notification_detail' notification.pk %}">
+                                {{ notification.title }}
+                            </a>
+
+                            <div class="small text-muted mt-1">
+                                {{ notification.message|truncatechars:100 }}
+                            </div>
+
+                            <div class="small text-muted mt-1">
+                                {{ notification.created_at|date:"M d, Y H:i" }}
+                            </div>
+
+                        </div>
+
+                        {% if notification.is_read %}
+                            <span class="badge bg-success">Read</span>
+                        {% else %}
+                            <span class="badge bg-warning text-dark">Unread</span>
+                        {% endif %}
+
+                    </div>
+                {% empty %}
+                    <p class="text-muted text-center py-3 mb-0">
+                        No notifications recorded.
+                    </p>
+                {% endfor %}
+
+                <div class="mt-3">
+                    <a href="{% url 'notifications:notification_list' %}"
+                       class="text-decoration-none">
+                        Manage notifications
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- =====================================================
+     DEVICE STATUS + ATTENDANCE
+====================================================== -->
+
+<div class="row g-3 mb-4">
+
+
+    <!-- =================================================
+         DEVICE STATUS
+    ================================================== -->
+
+    <div class="col-xl-6">
+
+        <div class="dashboard-card h-100">
+
+            <div class="dashboard-card-header">
+
+                <div class="dashboard-card-title">
+
+                    <div class="dashboard-card-title-icon">
+
+                        <i class="bi bi-cpu-fill"></i>
+
+                    </div>
+
+                    Device Status
+
+                </div>
+
+                <a href="{% url 'devices:device_list' %}"
+                   class="btn btn-sm btn-outline-primary">
+
+                    View Devices
+
+                    <i class="bi bi-arrow-right ms-1"></i>
+
+                </a>
+
+            </div>
+
+
+            <div class="dashboard-card-body">
+
+
+                <!-- DEVICE SUMMARY -->
+
+                <div class="device-summary">
+
+                    <div class="device-summary-item">
+
+                        <span class="device-summary-dot device-online-dot"></span>
+
+                        {{ active_devices|default:"0" }} Online
+
+                    </div>
+
+                    <div class="device-summary-item">
+
+                        <span class="device-summary-dot device-offline-dot"></span>
+
+                        {{ total_devices|default:"0"|add:"-"|add:active_devices|default:"0" }} Offline
+
+                    </div>
+
+                </div>
+
+
+                <!-- DEVICE LIST -->
+
+                {% if recent_devices %}
+
+                    <div class="device-list">
+
+                        {% for device in recent_devices|slice:":4" %}
+
+                            <div class="device-list-item">
+
+                                <div class="device-info">
+
+                                    <div class="device-icon">
+
+                                        <i class="bi bi-cpu-fill"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <a href="{% url 'devices:device_detail' device.id %}"
+                                           class="text-decoration-none device-name">
+
+                                            {{ device.device_name|default:"Unnamed Device" }}
+
+                                        </a>
+
+                                        <div class="device-code">
+
+                                            {{ device.device_code }}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                {% if device.connection_status == "online" %}
+
+                                    <span class="device-status-badge device-status-online">
+
+                                        <span class="device-status-dot"></span>
+
+                                        Online
+
+                                    </span>
+
+                                {% elif device.connection_status == "warning" %}
+
+                                    <span class="device-status-badge device-status-warning">
+
+                                        <span class="device-status-dot"></span>
+
+                                        Warning
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="device-status-badge device-status-offline">
+
+                                        <span class="device-status-dot"></span>
+
+                                        Offline
+
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% else %}
+
+                    <div class="dashboard-empty">
+
+                        <i class="bi bi-cpu d-block"></i>
+
+                        <div class="small">
+                            No devices registered
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+                <a href="{% url 'devices:device_list' %}"
+                   class="dashboard-view-link">
+
+                    View all devices
+
+                    <i class="bi bi-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         TODAY'S ATTENDANCE
+    ================================================== -->
+
+    <div class="col-xl-6">
+
+        <div class="dashboard-card h-100">
+
+            <div class="dashboard-card-header">
+
+                <div class="dashboard-card-title">
+
+                    <div class="dashboard-card-title-icon">
+
+                        <i class="bi bi-calendar-check"></i>
+
+                    </div>
+
+                    Today's Attendance
+
+                </div>
+
+                <span class="badge bg-light text-dark">
+
+                    {{ today|date:"M d, Y" }}
+
+                </span>
+
+            </div>
+
+
+            <div class="dashboard-card-body">
+
+                <div class="attendance-list">
+
+
+                    <!-- PRESENT -->
+
+                    <div class="attendance-row">
+
+                        <div class="attendance-label">
+
+                            <div class="attendance-icon attendance-present">
+
+                                <i class="bi bi-person-check-fill"></i>
+
+                            </div>
+
+                            Present
+
+                        </div>
+
+                        <div class="attendance-value">
+
+                            {{ present_today|default:"0" }}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LATE -->
+
+                    <div class="attendance-row">
+
+                        <div class="attendance-label">
+
+                            <div class="attendance-icon attendance-late">
+
+                                <i class="bi bi-clock-fill"></i>
+
+                            </div>
+
+                            Late
+
+                        </div>
+
+                        <div class="attendance-value">
+
+                            {{ late_today|default:"0" }}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EARLY -->
+
+                    <div class="attendance-row">
+
+                        <div class="attendance-label">
+
+                            <div class="attendance-icon attendance-early">
+
+                                <i class="bi bi-box-arrow-left"></i>
+
+                            </div>
+
+                            Early Departure
+
+                        </div>
+
+                        <div class="attendance-value">
+
+                            {{ early_departure_today|default:"0" }}
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <a href="{% url 'attendance:attendance_list' %}"
+                   class="dashboard-view-link">
+
+                    View attendance
+
+                    <i class="bi bi-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Recent Access Activity -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="mb-1">Recent Access Activity</h5>
+            <small class="text-muted">
+                Latest employee access events and authentication results
+            </small>
+        </div>
+        <a href="{% url 'logs:access_logs' %}"
+           class="btn btn-outline-primary btn-sm">
+            View All
+        </a>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">Employee</th>
+                        <th>Door</th>
+                        <th>Method</th>
+                        <th>Result</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in recent_logs %}
+                    <tr>
+                        <td class="ps-3">
+                            <div class="fw-semibold">
+                                {{ log.employee|default:"Unknown employee" }}
+                            </div>
+                            {% if log.employee %}
+                                <small class="text-muted">
+                                    {{ log.employee.employee_number|default:"" }}
+                                </small>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ log.door|default:"Unknown door" }}
+                        </td>
+
+                        <td>
+                            {{ log.authentication_method|default:"—" }}
+                        </td>
+
+                        <td>
+                            {% if log.action|upper == "GRANTED" %}
+                                <span class="badge bg-success">Granted</span>
+                            {% elif log.action|upper == "DENIED" %}
+                                <span class="badge bg-danger">Denied</span>
+                            {% else %}
+                                <span class="badge bg-secondary">
+                                    {{ log.action|default:"Unknown" }}
+                                </span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if log.event_time %}
+                                <div>{{ log.event_time|date:"H:i" }}</div>
+                                <small class="text-muted">
+                                    {{ log.event_time|date:"M d, Y" }}
+                                </small>
+                            {% else %}
+                                —
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            <i class="bi bi-clock-history fs-4 d-block mb-2"></i>
+                            No access activity recorded yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</div>
+
+{% endblock %}

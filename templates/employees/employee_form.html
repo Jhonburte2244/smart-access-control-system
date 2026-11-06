@@ -1,0 +1,1296 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    {{ page_title }}
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+                {{ page_title }}
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                {% if employee %}
+                    Update employee information and authentication credentials
+                {% else %}
+                    Register a new employee and authentication credentials
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'employees:employees' %}"
+            class="btn btn-outline-secondary"
+        >
+
+            <i class="bi bi-arrow-left"></i>
+
+            Back to Employees
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================================================
+         EMPLOYEE FORM
+    ========================================================== -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="mb-0 fw-semibold">
+
+                <i class="bi bi-person-plus me-2"></i>
+
+                Employee Information
+
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <!-- =================================================
+                     IDENTIFICATION
+                ================================================== -->
+
+                <h6 class="fw-bold mb-3">
+
+                    <i class="bi bi-person-vcard me-2"></i>
+
+                    Identification
+
+                </h6>
+
+
+                <div class="row g-3 mb-4">
+
+
+                    <!-- =============================================
+                         EMPLOYEE NUMBER
+                         Automatically generated
+                    ============================================== -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+
+                            Employee Number
+
+                        </label>
+
+
+                        {% if employee %}
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="{{ employee.employee_number }}"
+                                readonly
+                            >
+
+                        {% else %}
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="Automatically generated"
+                                readonly
+                            >
+
+                        {% endif %}
+
+
+                        <div class="form-text">
+
+                            Generated automatically by the system.
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =============================================
+                         EMPLOYEE ID
+                         6–8 DIGITS
+                    ============================================== -->
+
+                    <div class="col-md-4">
+
+                        <label
+                            for="employee_id"
+                            class="form-label fw-semibold"
+                        >
+
+                            Employee ID *
+
+                        </label>
+
+
+                        <input
+                            type="text"
+                            name="employee_id"
+                            id="employee_id"
+                            class="form-control"
+                            value="{{ employee.employee_id|default:'' }}"
+                            minlength="6"
+                            maxlength="8"
+                            pattern="[0-9]{6,8}"
+                            inputmode="numeric"
+                            placeholder="Enter 6–8 digit ID"
+                            required
+                        >
+
+
+                        <div class="form-text">
+
+                            Employee ID must contain 6–8 digits.
+
+                            <br>
+
+                            Example:
+                            <strong>105464</strong>,
+                            <strong>1045403</strong>,
+                            <strong>10557545</strong>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =================================================
+                     PERSONAL INFORMATION
+                ================================================== -->
+
+                <h6 class="fw-bold mb-3">
+
+                    <i class="bi bi-person me-2"></i>
+
+                    Personal Information
+
+                </h6>
+
+
+                <div class="row g-3 mb-4">
+
+
+                    <!-- First Name -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+
+                            First Name *
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="first_name"
+                            class="form-control"
+                            value="{{ employee.first_name|default:'' }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Middle Name -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+
+                            Middle Name
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="middle_name"
+                            class="form-control"
+                            value="{{ employee.middle_name|default:'' }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Last Name -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+
+                            Last Name *
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="last_name"
+                            class="form-control"
+                            value="{{ employee.last_name|default:'' }}"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Gender -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+
+                            Gender
+
+                        </label>
+
+                        <select
+                            name="gender"
+                            class="form-select"
+                        >
+
+                            <option value="">
+
+                                Select Gender
+
+                            </option>
+
+
+                            <option
+                                value="male"
+                                {% if employee.gender == "male" %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                Male
+
+                            </option>
+
+
+                            <option
+                                value="female"
+                                {% if employee.gender == "female" %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                Female
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Date of Birth -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+
+                            Date of Birth
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="date_of_birth"
+                            class="form-control"
+                            value="{{ employee.date_of_birth|date:'Y-m-d' }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Phone -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+
+                            Phone
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="phone"
+                            class="form-control"
+                            value="{{ employee.phone|default:'' }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Email -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+
+                            Email
+
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            class="form-control"
+                            value="{{ employee.email|default:'' }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Address -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+
+                            Address
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="address"
+                            class="form-control"
+                            value="{{ employee.address|default:'' }}"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     EMPLOYMENT INFORMATION
+                ================================================== -->
+
+                <h6 class="fw-bold mb-3">
+
+                    <i class="bi bi-briefcase me-2"></i>
+
+                    Employment Information
+
+                </h6>
+
+
+                <div class="row g-3 mb-4">
+
+
+                    <!-- Job Title -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+
+                            Job Title
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="job_title"
+							id="job_title"
+                            class="form-control"
+                            value="{{ employee.job_title|default:'' }}"
+                        >
+
+                    </div>
+					
+					<!-- Department --> 
+					
+					<div class="col-md-4"> 
+					    <label 
+						    for="department_id" 
+							class="form-label fw-semibold" 
+						> 
+						      
+							  Department 
+					    
+						</label> 
+						
+						<select 
+						    name="department_id" 
+							id="department_id" 
+							class="form-select" 
+						>
+
+						    <option value=""> 
+						
+						      Select Department 
+						    </option>
+    
+						    {% for department in departments %} 
+							
+							    <option 
+							
+							        value="{{ department.id }}" 
+						            {% if employee.department_id == department.id %}
+  								         selected 
+								    {% endif %} 
+							    > 
+								
+							        {{ department.name }} 
+							    </option> 
+					        {% empty %} 
+						    
+							    <option value="" disabled> 
+							
+							        No active departments available 
+							
+							    </option> 
+							
+						    {% endfor %} 
+						
+					    </select> 
+					 
+					    <div class="form-text">
+					    
+						    Select the department assigned to this employee. 
+					    
+						</div> 
+					
+					</div>
+
+
+                    <!-- Hire Date -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+
+                            Hire Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            name="hire_date"
+							id="hire_date"
+                            class="form-control"
+                            value="{{ employee.hire_date|date:'Y-m-d' }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="col-md-4">
+
+                        <label class="form-label fw-semibold">
+
+                            Status
+
+                        </label>
+
+                        <select
+                            name="status"
+							id="status"
+                            class="form-select"
+                        >
+
+                            <option
+                                value="active"
+                                {% if employee.status == "active" or not employee %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                Active
+
+                            </option>
+
+
+                            <option
+                                value="inactive"
+                                {% if employee.status == "inactive" %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                Inactive
+
+                            </option>
+
+
+                            <option
+                                value="suspended"
+                                {% if employee.status == "suspended" %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                Suspended
+
+                            </option>
+
+
+                            <option
+                                value="terminated"
+                                {% if employee.status == "terminated" %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                Terminated
+
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Photo Path -->
+
+                    <div class="col-md-12">
+
+                        <label class="form-label fw-semibold">
+
+                            Photo Path
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="photo_path"
+							id="photo_path"
+                            class="form-control"
+                            value="{{ employee.photo_path|default:'' }}"
+                            placeholder="Example: media/employees/EMP001.jpg"
+                        >
+
+                        <div class="form-text">
+
+                            Optional. This stores the path/reference to the employee photo.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     AUTHENTICATION / ACCESS CREDENTIALS
+                ================================================== -->
+
+                <div class="border-top pt-4 mt-4">
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+
+                        <div>
+
+                            <h6 class="fw-bold mb-1">
+
+                                <i class="bi bi-shield-lock me-2"></i>
+
+                                Authentication / Access Credentials
+
+                            </h6>
+
+                            <p class="text-muted small mb-0">
+
+                                Register the authentication data that can be associated with this employee.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         FINGERPRINT
+                    ================================================== -->
+
+                    <div class="card border mb-4">
+
+                        <div class="card-header bg-light py-3">
+
+                            <h6 class="mb-0 fw-semibold">
+
+                                <i class="bi bi-fingerprint me-2"></i>
+
+                                Fingerprint
+
+                            </h6>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="alert alert-info small">
+
+                                <i class="bi bi-info-circle me-2"></i>
+
+                                Enter a fingerprint template generated by the fingerprint
+                                sensor/software. The system stores the template in the
+                                existing fingerprint table.
+
+                            </div>
+
+
+                            <div class="row g-3">
+
+
+                                <!-- Fingerprint Template -->
+
+                                <div class="col-md-12">
+
+                                    <label
+                                        for="fingerprint_template"
+                                        class="form-label fw-semibold"
+                                    >
+
+                                        Fingerprint Template
+
+                                    </label>
+
+                                    <textarea
+                                        name="fingerprint_template"
+                                        id="fingerprint_template"
+                                        class="form-control"
+                                        rows="4"
+                                        placeholder="Paste fingerprint template data here..."
+                                    >{% if fingerprints %}{{ fingerprints.0.fingerprint_template|default:'' }}{% endif %}</textarea>
+
+                                    <div class="form-text">
+
+                                        Leave empty if fingerprint enrollment will be performed later.
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Finger Name -->
+
+                                <div class="col-md-4">
+
+                                    <label
+                                        for="finger_name"
+                                        class="form-label fw-semibold"
+                                    >
+
+                                        Finger Name
+
+                                    </label>
+
+                                    <select
+                                        name="finger_name"
+                                        id="finger_name"
+                                        class="form-select"
+                                    >
+
+                                        <option value="">
+
+                                            Select Finger
+
+                                        </option>
+
+                                        <option
+                                            value="Left Thumb"
+                                            {% if fingerprints and fingerprints.0.finger_name == "Left Thumb" %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            Left Thumb
+                                        </option>
+
+                                        <option
+                                            value="Left Index"
+                                            {% if fingerprints and fingerprints.0.finger_name == "Left Index" %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            Left Index
+                                        </option>
+
+                                        <option
+                                            value="Left Middle"
+                                            {% if fingerprints and fingerprints.0.finger_name == "Left Middle" %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            Left Middle
+                                        </option>
+
+                                        <option
+                                            value="Left Ring"
+                                            {% if fingerprints and fingerprints.0.finger_name == "Left Ring" %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            Left Ring
+                                        </option>
+
+                                        <option
+                                            value="Left Little"
+                                            {% if fingerprints and fingerprints.0.finger_name == "Left Little" %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            Left Little
+                                        </option>
+
+                                        <option
+                                            value="Right Thumb"
+                                            {% if fingerprints and fingerprints.0.finger_name == "Right Thumb" %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            Right Thumb
+                                        </option>
+
+                                        <option
+                                            value="Right Index"
+                                            {% if fingerprints and fingerprints.0.finger_name == "Right Index" %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            Right Index
+                                        </option>
+
+                                        <option
+                                            value="Right Middle"
+                                            {% if fingerprints and fingerprints.0.finger_name == "Right Middle" %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            Right Middle
+                                        </option>
+
+                                        <option
+                                            value="Right Ring"
+                                            {% if fingerprints and fingerprints.0.finger_name == "Right Ring" %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            Right Ring
+                                        </option>
+
+                                        <option
+                                            value="Right Little"
+                                            {% if fingerprints and fingerprints.0.finger_name == "Right Little" %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            Right Little
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <!-- Sensor Type -->
+
+                                <div class="col-md-4">
+
+                                    <label
+                                        for="sensor_type"
+                                        class="form-label fw-semibold"
+                                    >
+
+                                        Sensor Type
+
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="sensor_type"
+                                        id="sensor_type"
+                                        class="form-control"
+                                        value="{% if fingerprints %}{{ fingerprints.0.sensor_type|default:'' }}{% endif %}"
+                                        placeholder="Example: R307"
+                                    >
+
+                                </div>
+
+
+                                <!-- Fingerprint Index -->
+
+                                <div class="col-md-4">
+
+                                    <label
+                                        for="fingerprint_index"
+                                        class="form-label fw-semibold"
+                                    >
+
+                                        Sensor Index
+
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        name="fingerprint_index"
+                                        id="fingerprint_index"
+                                        class="form-control"
+                                        min="0"
+                                        value="{% if fingerprints %}{{ fingerprints.0.fingerprint_index|default:'' }}{% endif %}"
+                                        placeholder="Example: 1"
+                                    >
+
+                                    <div class="form-text">
+
+                                        Optional sensor/template index.
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Quality Score -->
+
+                                <div class="col-md-4">
+
+                                    <label
+                                        for="quality_score"
+                                        class="form-label fw-semibold"
+                                    >
+
+                                        Quality Score
+
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        name="quality_score"
+                                        id="quality_score"
+                                        class="form-control"
+                                        min="0"
+                                        max="100"
+                                        value="{% if fingerprints %}{{ fingerprints.0.quality_score|default:'' }}{% endif %}"
+                                        placeholder="0–100"
+                                    >
+
+                                    <div class="form-text">
+
+                                        Optional quality score.
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         RFID CARD
+                    ================================================== -->
+
+                    <div class="card border mb-4">
+
+                        <div class="card-header bg-light py-3">
+
+                            <h6 class="mb-0 fw-semibold">
+
+                                <i class="bi bi-credit-card-2-front me-2"></i>
+
+                                RFID Card
+
+                            </h6>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="alert alert-info small">
+
+                                <i class="bi bi-info-circle me-2"></i>
+
+                                Register an RFID card UID and optional card number
+                                for this employee.
+
+                            </div>
+
+
+                            <div class="row g-3">
+
+
+                                <!-- Card UID -->
+
+                                <div class="col-md-4">
+
+                                    <label
+                                        for="card_uid"
+                                        class="form-label fw-semibold"
+                                    >
+
+                                        Card UID
+
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="card_uid"
+                                        id="card_uid"
+                                        class="form-control"
+                                        value="{% if rfid_cards %}{{ rfid_cards.0.card_uid|default:'' }}{% endif %}"
+                                        placeholder="Example: A1B2C3D4"
+                                    >
+
+                                    <div class="form-text">
+
+                                        Unique UID read from the RFID card.
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Card Number -->
+
+                                <div class="col-md-4">
+
+                                    <label
+                                        for="card_number"
+                                        class="form-label fw-semibold"
+                                    >
+
+                                        Card Number
+
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="card_number"
+                                        id="card_number"
+                                        class="form-control"
+                                        value="{% if rfid_cards %}{{ rfid_cards.0.card_number|default:'' }}{% endif %}"
+                                        placeholder="Optional card number"
+                                    >
+
+                                </div>
+
+
+                                <!-- Card Type -->
+
+                                <div class="col-md-4">
+
+                                    <label
+                                        for="card_type"
+                                        class="form-label fw-semibold"
+                                    >
+
+                                        Card Type
+
+                                    </label>
+
+                                    <select
+                                        name="card_type"
+                                        id="card_type"
+                                        class="form-select"
+                                    >
+
+                                        <option
+                                            value="RFID"
+                                            {% if not rfid_cards or rfid_cards.0.card_type == "RFID" %}
+                                                selected
+                                            {% endif %}
+                                        >
+
+                                            RFID
+
+                                        </option>
+
+                                        <option
+                                            value="MIFARE"
+                                            {% if rfid_cards and rfid_cards.0.card_type == "MIFARE" %}
+                                                selected
+                                            {% endif %}
+                                        >
+
+                                            MIFARE
+
+                                        </option>
+
+                                        <option
+                                            value="NFC"
+                                            {% if rfid_cards and rfid_cards.0.card_type == "NFC" %}
+                                                selected
+                                            {% endif %}
+                                        >
+
+                                            NFC
+
+                                        </option>
+
+                                        <option
+                                            value="Other"
+                                            {% if rfid_cards and rfid_cards.0.card_type == "Other" %}
+                                                selected
+                                            {% endif %}
+                                        >
+
+                                            Other
+
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         FACE TEMPLATE
+                    ================================================== -->
+
+                    <div class="card border mb-4">
+
+                        <div class="card-header bg-light py-3">
+
+                            <h6 class="mb-0 fw-semibold">
+
+                                <i class="bi bi-person-bounding-box me-2"></i>
+
+                                Face Authentication
+
+                            </h6>
+
+                        </div>
+
+
+                        <div class="card-body">
+
+                            <div class="alert alert-info small">
+
+                                <i class="bi bi-info-circle me-2"></i>
+
+                                Store the face-recognition template generated by
+                                the face recognition system. This field corresponds
+                                to the existing <code>face_templates.template_data</code>
+                                database column.
+
+                            </div>
+
+
+                            <div class="row g-3">
+
+
+                                <!-- Face Template -->
+
+                                <div class="col-md-12">
+
+                                    <label
+                                        for="face_template_data"
+                                        class="form-label fw-semibold"
+                                    >
+
+                                        Face Template Data
+
+                                    </label>
+
+                                    <textarea
+                                        name="face_template_data"
+                                        id="face_template_data"
+                                        class="form-control"
+                                        rows="4"
+                                        placeholder="Paste face template data here..."
+                                    >{% if face_templates %}{{ face_templates.0.template_data|default:'' }}{% endif %}</textarea>
+
+                                    <div class="form-text">
+
+                                        Leave empty if face enrollment will be performed later.
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- Face Algorithm -->
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="face_algorithm"
+                                        class="form-label fw-semibold"
+                                    >
+
+                                        Recognition Algorithm
+
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="face_algorithm"
+                                        id="face_algorithm"
+                                        class="form-control"
+                                        value="{% if face_templates %}{{ face_templates.0.algorithm|default:'' }}{% endif %}"
+                                        placeholder="Example: FaceNet"
+                                    >
+
+                                </div>
+
+
+                                <!-- Confidence Threshold -->
+
+                                <div class="col-md-6">
+
+                                    <label
+                                        for="face_confidence_threshold"
+                                        class="form-label fw-semibold"
+                                    >
+
+                                        Confidence Threshold
+
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        name="face_confidence_threshold"
+                                        id="face_confidence_threshold"
+                                        class="form-control"
+                                        min="0"
+                                        max="100"
+                                        step="0.01"
+                                        value="{% if face_templates %}{{ face_templates.0.confidence_threshold|default:'80.00' }}{% else %}80.00{% endif %}"
+                                    >
+
+                                    <div class="form-text">
+
+                                        Default: 80.00
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =================================================
+                     AUTHENTICATION SUMMARY
+                ================================================== -->
+
+                <div class="alert alert-secondary">
+
+                    <div class="d-flex">
+
+                        <div class="me-3">
+
+                            <i class="bi bi-shield-check fs-4"></i>
+
+                        </div>
+
+                        <div>
+
+                            <strong>Authentication Methods</strong>
+
+                            <p class="mb-0 small">
+
+                                This employee can be associated with
+                                <strong>Fingerprint</strong>,
+                                <strong>RFID</strong>, and
+                                <strong>Face</strong> authentication.
+
+                                Authentication credentials are stored in their
+                                existing database tables and are linked to this employee.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     FORM ACTIONS
+                ================================================== -->
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+                    <a
+                        href="{% url 'employees:employees' %}"
+                        class="btn btn-outline-secondary"
+                    >
+
+                        <i class="bi bi-x-circle me-1"></i>
+
+                        Cancel
+
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bi bi-check-circle me-1"></i>
+
+                        {{ submit_text }}
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

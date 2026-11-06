@@ -1,0 +1,488 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+Door Details
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+```
+<!-- =========================================================
+     PAGE HEADER
+========================================================== -->
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+        <h2 class="fw-bold mb-1">
+            <i class="bi bi-door-open me-2"></i>
+            Door Details
+        </h2>
+
+        <p class="text-muted mb-0">
+            View access control door information and configuration.
+        </p>
+    </div>
+
+    <div class="d-flex gap-2">
+
+        <a
+            href="{% url 'access_control:doors' %}"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Doors
+        </a>
+
+        <a
+            href="{% url 'access_control:door_edit' door.id %}"
+            class="btn btn-primary"
+        >
+            <i class="bi bi-pencil me-1"></i>
+            Edit Door
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MAIN INFORMATION
+========================================================== -->
+
+<div class="row g-4">
+
+    <!-- =====================================================
+         DOOR OVERVIEW
+    ====================================================== -->
+
+    <div class="col-lg-8">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-header bg-white py-3">
+
+                <h5 class="mb-0 fw-semibold">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Door Information
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <!-- Door Code -->
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Door Code
+                        </label>
+
+                        <div class="fw-semibold fs-5">
+                            {{ door.door_code }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- Door Name -->
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Door Name
+                        </label>
+
+                        <div class="fw-semibold fs-5">
+                            {{ door.name }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- Location -->
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Location
+                        </label>
+
+                        <div class="fw-semibold">
+
+                            {% if door.location %}
+                                {{ door.location }}
+                            {% else %}
+                                <span class="text-muted">
+                                    Not specified
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Lock Type -->
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Lock Type
+                        </label>
+
+                        <div>
+
+                            {% if door.lock_type %}
+
+                                <span class="badge bg-light text-dark fs-6">
+                                    {{ door.lock_type|title }}
+                                </span>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    Not specified
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Unlock Duration -->
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Unlock Duration
+                        </label>
+
+                        <div class="fw-semibold">
+
+                            <i class="bi bi-clock me-1"></i>
+
+                            {{ door.unlock_duration_seconds }}
+                            seconds
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="col-md-6">
+
+                        <label class="text-muted small">
+                            Status
+                        </label>
+
+                        <div>
+
+                            {% if door.is_active %}
+
+                                <span class="badge bg-success fs-6">
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    Active
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge bg-secondary fs-6">
+                                    <i class="bi bi-x-circle me-1"></i>
+                                    Inactive
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         HARDWARE STATUS
+    ====================================================== -->
+
+    <div class="col-lg-4">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-header bg-white py-3">
+
+                <h5 class="mb-0 fw-semibold">
+                    <i class="bi bi-cpu me-2"></i>
+                    Hardware Configuration
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <!-- Door Sensor -->
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+
+                    <div>
+
+                        <div class="fw-semibold">
+                            <i class="bi bi-broadcast me-2"></i>
+                            Door Sensor
+                        </div>
+
+                        <small class="text-muted">
+                            Detects door open/closed state
+                        </small>
+
+                    </div>
+
+                    {% if door.sensor_enabled %}
+
+                        <span class="badge bg-success">
+                            Enabled
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-secondary">
+                            Disabled
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Exit Button -->
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <div class="fw-semibold">
+                            <i class="bi bi-box-arrow-right me-2"></i>
+                            Exit Button
+                        </div>
+
+                        <small class="text-muted">
+                            Internal exit button
+                        </small>
+
+                    </div>
+
+                    {% if door.exit_button_enabled %}
+
+                        <span class="badge bg-success">
+                            Enabled
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-secondary">
+                            Disabled
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DATABASE INFORMATION
+    ====================================================== -->
+
+    <div class="col-12">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-header bg-white py-3">
+
+                <h5 class="mb-0 fw-semibold">
+                    <i class="bi bi-database me-2"></i>
+                    Record Information
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <!-- Database ID -->
+
+                    <div class="col-md-4">
+
+                        <label class="text-muted small">
+                            Database ID
+                        </label>
+
+                        <div class="fw-semibold">
+                            {{ door.id }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- Created -->
+
+                    <div class="col-md-4">
+
+                        <label class="text-muted small">
+                            Created At
+                        </label>
+
+                        <div class="fw-semibold">
+
+                            {% if door.created_at %}
+                                {{ door.created_at|date:"d M Y, H:i" }}
+                            {% else %}
+                                <span class="text-muted">
+                                    Not available
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Updated -->
+
+                    <div class="col-md-4">
+
+                        <label class="text-muted small">
+                            Last Updated
+                        </label>
+
+                        <div class="fw-semibold">
+
+                            {% if door.updated_at %}
+                                {{ door.updated_at|date:"d M Y, H:i" }}
+                            {% else %}
+                                <span class="text-muted">
+                                    Not available
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         ACTIONS
+    ====================================================== -->
+
+    <div class="col-12">
+
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div>
+
+                        <h6 class="fw-semibold mb-1">
+                            Door Actions
+                        </h6>
+
+                        <p class="text-muted mb-0 small">
+                            Manage the status or configuration of this door.
+                        </p>
+
+                    </div>
+
+                    <div class="d-flex gap-2">
+
+                        <!-- Toggle Status -->
+
+                        <form
+                            method="post"
+                            action="{% url 'access_control:door_toggle_status' door.id %}"
+                        >
+
+                            {% csrf_token %}
+
+                            {% if door.is_active %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-outline-warning"
+                                >
+                                    <i class="bi bi-toggle-on me-1"></i>
+                                    Deactivate
+                                </button>
+
+                            {% else %}
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-outline-success"
+                                >
+                                    <i class="bi bi-toggle-off me-1"></i>
+                                    Activate
+                                </button>
+
+                            {% endif %}
+
+                        </form>
+
+
+                        <!-- Delete -->
+
+                        <a
+                            href="{% url 'access_control:door_delete' door.id %}"
+                            class="btn btn-outline-danger"
+                        >
+                            <i class="bi bi-trash me-1"></i>
+                            Delete
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

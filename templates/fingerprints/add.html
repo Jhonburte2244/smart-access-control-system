@@ -1,0 +1,290 @@
+```html
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Add Fingerprint
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                Add Fingerprint
+            </h2>
+
+            <p class="text-muted mb-0">
+                Register a fingerprint for an employee
+            </p>
+        </div>
+
+        <a href="{% url 'fingerprints:fingerprint_list' %}"
+           class="btn btn-secondary">
+
+            <i class="bi bi-arrow-left"></i>
+            Back
+
+        </a>
+
+    </div>
+
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <div class="row g-3">
+
+
+                    <!-- Employee -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Employee
+                        </label>
+
+                        <select
+                            name="employee_id"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                Select Employee
+                            </option>
+
+                            {% for employee in employees %}
+
+                                <option value="{{ employee.id }}">
+
+                                    {{ employee.employee_number }}
+                                    -
+                                    {{ employee.first_name }}
+                                    {{ employee.middle_name }}
+                                    {{ employee.last_name }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Finger -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Finger
+                        </label>
+
+                        <select
+                            name="finger_name"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                Select Finger
+                            </option>
+
+                            <option value="Left Thumb">
+                                Left Thumb
+                            </option>
+
+                            <option value="Left Index">
+                                Left Index
+                            </option>
+
+                            <option value="Left Middle">
+                                Left Middle
+                            </option>
+
+                            <option value="Left Ring">
+                                Left Ring
+                            </option>
+
+                            <option value="Left Little">
+                                Left Little
+                            </option>
+
+                            <option value="Right Thumb">
+                                Right Thumb
+                            </option>
+
+                            <option value="Right Index">
+                                Right Index
+                            </option>
+
+                            <option value="Right Middle">
+                                Right Middle
+                            </option>
+
+                            <option value="Right Ring">
+                                Right Ring
+                            </option>
+
+                            <option value="Right Little">
+                                Right Little
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Sensor -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Sensor Type
+                        </label>
+
+                        <input
+                            type="text"
+                            name="sensor_type"
+                            class="form-control"
+                            placeholder="Example: R307"
+                        >
+
+                    </div>
+
+
+                    <!-- Fingerprint Index -->
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+                            Fingerprint Index
+                        </label>
+
+                        <input
+                            type="number"
+                            name="fingerprint_index"
+                            class="form-control"
+                            min="0"
+                            placeholder="Example: 1"
+                        >
+
+                    </div>
+
+
+                    <!-- Quality -->
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+                            Quality Score
+                        </label>
+
+                        <input
+                            type="number"
+                            name="quality_score"
+                            class="form-control"
+                            min="0"
+                            max="100"
+                            placeholder="0 - 100"
+                        >
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option value="active">
+                                Active
+                            </option>
+
+                            <option value="inactive">
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Template -->
+
+                    <div class="col-12">
+
+                        <label class="form-label fw-semibold">
+                            Fingerprint Template
+                        </label>
+
+                        <textarea
+                            name="fingerprint_template"
+                            class="form-control"
+                            rows="8"
+                            required
+                            placeholder="Paste or enter the fingerprint template..."
+                        ></textarea>
+
+                        <div class="form-text">
+                            This field stores the biometric fingerprint
+                            template. It is not a fingerprint image.
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <div class="d-flex justify-content-end gap-2">
+
+                    <a
+                        href="{% url 'fingerprints:fingerprint_list' %}"
+                        class="btn btn-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bi bi-fingerprint"></i>
+                        Save Fingerprint
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+```

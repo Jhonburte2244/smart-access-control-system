@@ -1,0 +1,523 @@
+```html
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Security Settings | Smart Access Control System
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+
+    <div class="mb-4">
+
+        <h2 class="fw-bold mb-1">
+            Security Settings
+        </h2>
+
+        <p class="text-muted mb-0">
+            Configure authentication, login security, session control,
+            and password policies.
+        </p>
+
+    </div>
+
+
+    <form method="post">
+
+        {% csrf_token %}
+
+
+        <!-- Security Status -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-body p-4">
+
+                <h5 class="fw-bold mb-4">
+
+                    <i class="bi bi-shield-check me-2"></i>
+
+                    Security Status
+
+                </h5>
+
+
+                <div class="form-check form-switch">
+
+                    <input class="form-check-input"
+                           type="checkbox"
+                           role="switch"
+                           id="is_active"
+                           name="is_active"
+                           {% if settings.is_active %}checked{% endif %}>
+
+                    <label class="form-check-label fw-semibold"
+                           for="is_active">
+
+                        Enable Security Settings
+
+                    </label>
+
+                </div>
+
+
+                <div class="text-muted small mt-2">
+
+                    Enables the configured security controls
+                    throughout the Smart Access Control System.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Session Security -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-body p-4">
+
+                <h5 class="fw-bold mb-4">
+
+                    <i class="bi bi-clock-history me-2"></i>
+
+                    Session Security
+
+                </h5>
+
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+
+                            Session Timeout
+
+                        </label>
+
+                        <div class="input-group">
+
+                            <input type="number"
+                                   name="session_timeout_minutes"
+                                   class="form-control"
+                                   min="1"
+                                   value="{{ settings.session_timeout_minutes }}"
+                                   required>
+
+                            <span class="input-group-text">
+
+                                Minutes
+
+                            </span>
+
+                        </div>
+
+                        <div class="form-text">
+
+                            Automatically end inactive user sessions
+                            after this period.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Login Security -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-body p-4">
+
+                <h5 class="fw-bold mb-4">
+
+                    <i class="bi bi-lock me-2"></i>
+
+                    Login Security
+
+                </h5>
+
+
+                <div class="row g-4">
+
+                    <!-- Maximum Login Attempts -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+
+                            Maximum Login Attempts
+
+                        </label>
+
+                        <input type="number"
+                               name="max_login_attempts"
+                               class="form-control"
+                               min="1"
+                               value="{{ settings.max_login_attempts }}"
+                               required>
+
+                        <div class="form-text">
+
+                            Number of failed attempts allowed
+                            before account lockout.
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Lockout Duration -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+
+                            Account Lockout Duration
+
+                        </label>
+
+                        <div class="input-group">
+
+                            <input type="number"
+                                   name="lockout_duration_minutes"
+                                   class="form-control"
+                                   min="1"
+                                   value="{{ settings.lockout_duration_minutes }}"
+                                   required>
+
+                            <span class="input-group-text">
+
+                                Minutes
+
+                            </span>
+
+                        </div>
+
+                        <div class="form-text">
+
+                            Duration an account remains locked
+                            after exceeding the login limit.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Password Policy -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-body p-4">
+
+                <h5 class="fw-bold mb-4">
+
+                    <i class="bi bi-key me-2"></i>
+
+                    Password Policy
+
+                </h5>
+
+
+                <div class="row g-4">
+
+                    <!-- Minimum Password Length -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+
+                            Minimum Password Length
+
+                        </label>
+
+                        <input type="number"
+                               name="password_min_length"
+                               class="form-control"
+                               min="4"
+                               value="{{ settings.password_min_length }}"
+                               required>
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <div class="row g-3">
+
+                    <!-- Uppercase -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="require_uppercase"
+                                   id="require_uppercase"
+                                   {% if settings.require_uppercase %}checked{% endif %}>
+
+                            <label class="form-check-label fw-semibold"
+                                   for="require_uppercase">
+
+                                Require Uppercase Letter
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Lowercase -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="require_lowercase"
+                                   id="require_lowercase"
+                                   {% if settings.require_lowercase %}checked{% endif %}>
+
+                            <label class="form-check-label fw-semibold"
+                                   for="require_lowercase">
+
+                                Require Lowercase Letter
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Number -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="require_number"
+                                   id="require_number"
+                                   {% if settings.require_number %}checked{% endif %}>
+
+                            <label class="form-check-label fw-semibold"
+                                   for="require_number">
+
+                                Require Number
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Special Character -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="require_special_character"
+                                   id="require_special_character"
+                                   {% if settings.require_special_character %}checked{% endif %}>
+
+                            <label class="form-check-label fw-semibold"
+                                   for="require_special_character">
+
+                                Require Special Character
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Authentication Settings -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-body p-4">
+
+                <h5 class="fw-bold mb-4">
+
+                    <i class="bi bi-fingerprint me-2"></i>
+
+                    Authentication Settings
+
+                </h5>
+
+
+                <div class="row g-3">
+
+                    <!-- Password -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="password_authentication"
+                                   id="password_authentication"
+                                   {% if settings.password_authentication %}checked{% endif %}>
+
+                            <label class="form-check-label fw-semibold"
+                                   for="password_authentication">
+
+                                Password Authentication
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Fingerprint -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="fingerprint_authentication"
+                                   id="fingerprint_authentication"
+                                   {% if settings.fingerprint_authentication %}checked{% endif %}>
+
+                            <label class="form-check-label fw-semibold"
+                                   for="fingerprint_authentication">
+
+                                Fingerprint Authentication
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- RFID -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="rfid_authentication"
+                                   id="rfid_authentication"
+                                   {% if settings.rfid_authentication %}checked{% endif %}>
+
+                            <label class="form-check-label fw-semibold"
+                                   for="rfid_authentication">
+
+                                RFID Authentication
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Face -->
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="face_authentication"
+                                   id="face_authentication"
+                                   {% if settings.face_authentication %}checked{% endif %}>
+
+                            <label class="form-check-label fw-semibold"
+                                   for="face_authentication">
+
+                                Face Recognition
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Save -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-body p-4">
+
+                <div class="d-flex justify-content-end">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="bi bi-check-lg me-1"></i>
+
+                        Save Security Settings
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </form>
+
+</div>
+
+{% endblock %}
+```

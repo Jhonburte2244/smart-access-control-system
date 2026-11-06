@@ -1,0 +1,68 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Face Template Detail | SMAC{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <h2 class="fw-bold mb-4">
+        Face Template Detail
+    </h2>
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <p>
+                <strong>Employee:</strong>
+                {{ face_template.employee.employee_number }}
+            </p>
+
+            <p>
+                <strong>Employee ID:</strong>
+                {{ face_template.employee.employee_id }}
+            </p>
+
+            <p>
+                <strong>Algorithm:</strong>
+                {{ face_template.algorithm|default:"Not configured" }}
+            </p>
+
+            <p>
+                <strong>Confidence Threshold:</strong>
+                {{ face_template.confidence_threshold }}%
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                {{ face_template.status }}
+            </p>
+
+            <p>
+                <strong>Created:</strong>
+                {{ face_template.created_at }}
+            </p>
+
+            <p>
+                <strong>Updated:</strong>
+                {{ face_template.updated_at }}
+            </p>
+
+            <a href="{% url 'face_recognition:face_template_edit' face_template.pk %}"
+               class="btn btn-primary">
+                Edit
+            </a>
+
+            <a href="{% url 'face_recognition:face_template_list' %}"
+               class="btn btn-secondary">
+                Back
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

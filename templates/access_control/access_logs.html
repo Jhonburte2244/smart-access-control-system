@@ -1,0 +1,591 @@
+
+{% extends "dashboard/base.html" %}
+
+{% block title %}Access Logs | Smart Access Control System{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-journal-text me-2"></i>
+                Access Logs
+            </h2>
+            <p class="text-muted mb-0">
+                Monitor and review all access authentication events.
+            </p>
+        </div>
+
+        <span class="badge bg-success px-3 py-2">
+            <i class="bi bi-shield-check me-1"></i>
+            Access Monitoring
+        </span>
+    </div>
+
+
+    <!-- STATISTICS -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Total Events</p>
+                            <h3 class="fw-bold mb-0">{{ total_logs|default:0 }}</h3>
+                        </div>
+                        <i class="bi bi-journal-text fs-2 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Access Granted</p>
+                            <h3 class="fw-bold text-success mb-0">
+                                {{ granted_logs|default:0 }}
+                            </h3>
+                        </div>
+                        <i class="bi bi-check-circle fs-2 text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Access Denied</p>
+                            <h3 class="fw-bold text-danger mb-0">
+                                {{ denied_logs|default:0 }}
+                            </h3>
+                        </div>
+                        <i class="bi bi-x-circle fs-2 text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 col-sm-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Today's Events</p>
+                            <h3 class="fw-bold mb-0">{{ today_logs|default:0 }}</h3>
+                        </div>
+                        <i class="bi bi-calendar-day fs-2 text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- SEARCH, FILTERS AND REPORTS -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h5 class="fw-bold mb-1">Search, Filter & Reports</h5>
+                    <p class="text-muted small mb-0">
+                        Filter access events and generate security reports.
+                    </p>
+                </div>
+                <i class="bi bi-file-earmark-bar-graph fs-3 text-primary"></i>
+            </div>
+
+            <form method="get"
+                  action="{% url 'access_control:access_logs' %}">
+
+                <div class="row g-3">
+
+                    <!-- SEARCH -->
+                    <div class="col-lg-4 col-md-6">
+                        <label for="search" class="form-label">Search</label>
+                        <input
+                            type="text"
+                            name="search"
+                            id="search"
+                            class="form-control"
+                            placeholder="Employee, door, authentication..."
+                            value="{{ request.GET.search|default:'' }}"
+                        >
+                    </div>
+
+                    <!-- DOOR -->
+                    <div class="col-lg-4 col-md-6">
+                        <label for="door_id" class="form-label">Door</label>
+
+                        <select name="door_id"
+                                id="door_id"
+                                class="form-select">
+
+                            <option value=""
+                                {% if not request.GET.door_id %}selected{% endif %}>
+                                All Doors
+                            </option>
+
+                            {% for door in doors %}
+                                <option
+                                    value="{{ door.pk }}"
+                                    {% if request.GET.door_id == door.pk|stringformat:"s" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ door.name }} ({{ door.door_code }})
+                                </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <!-- EMPLOYEE -->
+                    <div class="col-lg-4 col-md-6">
+                        <label for="employee_id" class="form-label">
+                            Employee
+                        </label>
+
+                        <select name="employee_id"
+                                id="employee_id"
+                                class="form-select">
+
+                            <option value=""
+                                {% if not request.GET.employee_id %}selected{% endif %}>
+                                All Employees
+                            </option>
+
+                            {% for employee in employees %}
+                                <option
+                                    value="{{ employee.pk }}"
+                                    {% if request.GET.employee_id == employee.pk|stringformat:"s" %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ employee.first_name }}
+                                    {{ employee.last_name }}
+                                    ({{ employee.employee_number }})
+                                </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <!-- AUTHENTICATION METHOD -->
+                    <div class="col-lg-3 col-md-6">
+                        <label for="authentication_method"
+                               class="form-label">
+                            Authentication Method
+                        </label>
+
+                        <select name="authentication_method"
+                                id="authentication_method"
+                                class="form-select">
+
+                            <option value=""
+                                {% if not request.GET.authentication_method %}
+                                    selected
+                                {% endif %}>
+                                All Methods
+                            </option>
+
+                            <option value="FACE"
+                                {% if request.GET.authentication_method|upper == "FACE" %}
+                                    selected
+                                {% endif %}>
+                                Face Recognition
+                            </option>
+
+                            <option value="Fingerprint"
+                                {% if request.GET.authentication_method|lower == "fingerprint" %}
+                                    selected
+                                {% endif %}>
+                                Fingerprint
+                            </option>
+
+                            <option value="RFID"
+                                {% if request.GET.authentication_method|upper == "RFID" %}
+                                    selected
+                                {% endif %}>
+                                RFID
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <!-- ACCESS RESULT -->
+                    <div class="col-lg-3 col-md-6">
+                        <label for="action" class="form-label">
+                            Access Result
+                        </label>
+
+                        <select name="action"
+                                id="action"
+                                class="form-select">
+
+                            <option value=""
+                                {% if not request.GET.action %}selected{% endif %}>
+                                All Results
+                            </option>
+
+                            <option value="granted"
+                                {% if request.GET.action|lower == "granted" %}
+                                    selected
+                                {% endif %}>
+                                Granted
+                            </option>
+
+                            <option value="denied"
+                                {% if request.GET.action|lower == "denied" %}
+                                    selected
+                                {% endif %}>
+                                Denied
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <!-- FROM DATE -->
+                    <div class="col-lg-3 col-md-6">
+                        <label for="date_from" class="form-label">
+                            From Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="date_from"
+                            id="date_from"
+                            class="form-control"
+                            value="{{ request.GET.date_from|default:'' }}"
+                        >
+                    </div>
+
+                    <!-- TO DATE -->
+                    <div class="col-lg-3 col-md-6">
+                        <label for="date_to" class="form-label">
+                            To Date
+                        </label>
+
+                        <input
+                            type="date"
+                            name="date_to"
+                            id="date_to"
+                            class="form-control"
+                            value="{{ request.GET.date_to|default:'' }}"
+                        >
+                    </div>
+
+                </div>
+
+
+                <!-- FILTER AND EXPORT BUTTONS -->
+                <div class="d-flex flex-wrap gap-2 mt-4">
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-funnel me-1"></i>
+                        Apply Filters
+                    </button>
+
+                    <a href="{% url 'access_control:access_logs' %}"
+                       class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i>
+                        Reset
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                        formaction="{% url 'access_control:export_access_logs_csv' %}">
+                        <i class="bi bi-file-earmark-spreadsheet me-1"></i>
+                        Export CSV
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger"
+                        formaction="{% url 'access_control:export_access_logs_pdf' %}">
+                        <i class="bi bi-file-earmark-pdf me-1"></i>
+                        Export PDF
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-dark"
+                        formaction="{% url 'access_control:security_audit_report' %}">
+                        <i class="bi bi-shield-check me-1"></i>
+                        Security Audit
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- ACCESS LOG TABLE -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white border-0 py-3">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+
+                <div>
+                    <h5 class="fw-bold mb-1">Access Activity</h5>
+                    <small class="text-muted">
+                        Latest authentication events
+                    </small>
+                </div>
+
+                <span class="badge bg-light text-dark">
+                    {{ logs|length }} displayed
+                </span>
+
+            </div>
+        </div>
+
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">#</th>
+                            <th>Date & Time</th>
+                            <th>Employee</th>
+                            <th>Door</th>
+                            <th>Authentication</th>
+                            <th>Action</th>
+                            <th>Confidence</th>
+                            <th>Reason</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for log in logs %}
+
+                            <tr>
+
+                                <!-- NUMBER -->
+                                <td class="ps-4">
+                                    <span class="text-muted">
+                                        {{ forloop.counter }}
+                                    </span>
+                                </td>
+
+
+                                <!-- DATE AND TIME -->
+                                <td>
+                                    {% if log.event_time %}
+                                        <div class="fw-semibold">
+                                            {{ log.event_time|date:"M d, Y" }}
+                                        </div>
+                                        <small class="text-muted">
+                                            {{ log.event_time|date:"H:i:s" }}
+                                        </small>
+                                    {% else %}
+                                        <span class="text-muted">N/A</span>
+                                    {% endif %}
+                                </td>
+
+
+                                <!-- EMPLOYEE -->
+                                <td>
+                                    {% if log.employee %}
+
+                                        <div class="fw-semibold">
+                                            {{ log.employee.first_name }}
+                                            {% if log.employee.last_name %}
+                                                {{ log.employee.last_name }}
+                                            {% endif %}
+                                        </div>
+
+                                        <small class="text-muted">
+                                            {{ log.employee.employee_number }}
+
+                                            {% if log.employee.employee_id %}
+                                                • ID {{ log.employee.employee_id }}
+                                            {% endif %}
+                                        </small>
+
+                                    {% else %}
+
+                                        <span class="text-danger fw-semibold">
+                                            Unknown Employee
+                                        </span>
+
+                                    {% endif %}
+                                </td>
+
+
+                                <!-- DOOR -->
+                                <td>
+                                    {% if log.door %}
+
+                                        <div class="fw-semibold">
+                                            {{ log.door.name }}
+                                        </div>
+
+                                        <small class="text-muted">
+                                            {{ log.door.door_code }}
+                                        </small>
+
+                                    {% else %}
+
+                                        <span class="text-muted">No Door</span>
+
+                                    {% endif %}
+                                </td>
+
+
+                                <!-- AUTHENTICATION -->
+                                <td>
+
+                                    {% if log.authentication_method|upper == "FACE" %}
+
+                                        <span class="badge bg-primary-subtle text-primary px-2 py-2">
+                                            <i class="bi bi-person-bounding-box me-1"></i>
+                                            Face
+                                        </span>
+
+                                    {% elif log.authentication_method|lower == "fingerprint" %}
+
+                                        <span class="badge bg-info-subtle text-info-emphasis px-2 py-2">
+                                            <i class="bi bi-fingerprint me-1"></i>
+                                            Fingerprint
+                                        </span>
+
+                                    {% elif log.authentication_method|upper == "RFID" %}
+
+                                        <span class="badge bg-warning-subtle text-warning-emphasis px-2 py-2">
+                                            <i class="bi bi-credit-card me-1"></i>
+                                            RFID
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-secondary-subtle text-secondary px-2 py-2">
+                                            {{ log.authentication_method|default:"Unknown" }}
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- ACCESS RESULT -->
+                                <td>
+
+                                    {% if log.action|lower == "granted" %}
+
+                                        <span class="badge bg-success px-2 py-2">
+                                            <i class="bi bi-check-circle me-1"></i>
+                                            Granted
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-danger px-2 py-2">
+                                            <i class="bi bi-x-circle me-1"></i>
+                                            Denied
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- CONFIDENCE -->
+                                <td>
+
+                                    {% if log.confidence_score != None %}
+
+                                        <span class="fw-semibold">
+                                            {{ log.confidence_score }}%
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="text-muted">—</span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- REASON -->
+                                <td>
+                                    <span
+                                        class="text-muted"
+                                        title="{{ log.reason|default:'' }}">
+                                        {{ log.reason|default:"No reason provided"|truncatechars:45 }}
+                                    </span>
+                                </td>
+
+
+                                <!-- ACTIONS -->
+                                <td class="text-center">
+                                    <a
+                                        href="{% url 'access_control:access_log_detail' log.id %}"
+                                        class="btn btn-sm btn-outline-primary"
+                                        title="View access log details">
+                                        <i class="bi bi-eye me-1"></i>
+                                        View
+                                    </a>
+                                </td>
+
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+                                <td colspan="9" class="text-center py-5">
+
+                                    <div class="mb-3">
+                                        <i
+                                            class="bi bi-journal-x text-muted"
+                                            style="font-size: 3rem;">
+                                        </i>
+                                    </div>
+
+                                    <h5 class="fw-bold">
+                                        No Access Logs Found
+                                    </h5>
+
+                                    <p class="text-muted mb-0">
+                                        No authentication events match your current filters.
+                                    </p>
+
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

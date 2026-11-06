@@ -1,0 +1,60 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Security Audit Report{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-shield-check me-2"></i>Security Audit Report</h2>
+            <p class="text-muted">Review access activity for security monitoring.</p>
+        </div>
+        <a href="{% url 'access_control:access_logs' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Back to Access Logs
+        </a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5>Total Access Log Records</h5>
+            <h3>{{ total_logs }}</h3>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <strong>Recent Access Activity</strong>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Employee</th>
+                        <th>Door</th>
+                        <th>Status</th>
+                        <th>Date / Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.id }}</td>
+                        <td>{{ log.employee|default:"-" }}</td>
+                        <td>{{ log.door|default:"-" }}</td>
+                        <td>{{ log.status|default:"-" }}</td>
+                        <td>{{ log.timestamp|default:"-" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">
+                            No access log records found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

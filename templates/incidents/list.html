@@ -1,0 +1,369 @@
+
+{% extends "dashboard/base.html" %}
+
+{% block title %}Incidents | Smart Access Control System{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Incidents</h2>
+            <p class="text-muted mb-0">
+                Monitor and manage security incidents
+            </p>
+        </div>
+
+        <a href="{% url 'incidents:incident_create' %}"
+           class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i>
+            Report Incident
+        </a>
+    </div>
+
+    <!-- Incident Summary Cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-sm-6 col-xl">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Total Incidents</p>
+                            <h3 class="fw-bold mb-0">
+                                {{ total_incidents|default:0 }}
+                            </h3>
+                        </div>
+                        <i class="bi bi-shield-exclamation fs-2 text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Open</p>
+                            <h3 class="fw-bold text-danger mb-0">
+                                {{ open_incidents|default:0 }}
+                            </h3>
+                        </div>
+                        <i class="bi bi-exclamation-circle fs-2 text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Investigating</p>
+                            <h3 class="fw-bold text-warning mb-0">
+                                {{ investigating_incidents|default:0 }}
+                            </h3>
+                        </div>
+                        <i class="bi bi-search fs-2 text-warning"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Resolved</p>
+                            <h3 class="fw-bold text-success mb-0">
+                                {{ resolved_incidents|default:0 }}
+                            </h3>
+                        </div>
+                        <i class="bi bi-check-circle fs-2 text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Closed</p>
+                            <h3 class="fw-bold text-secondary mb-0">
+                                {{ closed_incidents|default:0 }}
+                            </h3>
+                        </div>
+                        <i class="bi bi-lock fs-2 text-secondary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- End Incident Summary Cards -->
+
+
+    <!-- Search and Filters -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+
+            <form method="get">
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-5">
+                        <label for="incident-search"
+                               class="form-label fw-semibold">
+                            Search
+                        </label>
+
+                        <input
+                            id="incident-search"
+                            type="text"
+                            name="search"
+                            value="{{ search }}"
+                            class="form-control"
+                            placeholder="Incident, employee, door..."
+                        >
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="incident-severity"
+                               class="form-label fw-semibold">
+                            Severity
+                        </label>
+
+                        <select id="incident-severity"
+                                name="severity"
+                                class="form-select">
+
+                            <option value="">All Severities</option>
+
+                            {% for value, label in severity_choices %}
+                                <option value="{{ value }}"
+                                    {% if selected_severity == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <label for="incident-status"
+                               class="form-label fw-semibold">
+                            Status
+                        </label>
+
+                        <select id="incident-status"
+                                name="status"
+                                class="form-select">
+
+                            <option value="">All Statuses</option>
+
+                            {% for value, label in status_choices %}
+                                <option value="{{ value }}"
+                                    {% if selected_status == value %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search me-1"></i>
+                                Filter
+                            </button>
+
+                            <a href="{% url 'incidents:incident_list' %}"
+                               class="btn btn-outline-secondary">
+                                Reset
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- Incidents Table -->
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold">Security Incidents</h5>
+
+                <span class="text-muted">
+                    {{ incidents|length }}
+                    incident{{ incidents|length|pluralize }}
+                </span>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Incident</th>
+                        <th>Employee</th>
+                        <th>Door</th>
+                        <th>Severity</th>
+                        <th>Status</th>
+                        <th>Reported</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for incident in incidents %}
+                        <tr>
+
+                            <!-- Incident ID -->
+                            <td>
+                                <span class="fw-semibold">
+                                    #{{ incident.id }}
+                                </span>
+                            </td>
+
+                            <!-- Incident Type and Description -->
+                            <td>
+                                <div class="fw-semibold">
+                                    {{ incident.incident_type }}
+                                </div>
+
+                                {% if incident.description %}
+                                    <small class="text-muted">
+                                        {{ incident.description|truncatechars:60 }}
+                                    </small>
+                                {% endif %}
+                            </td>
+
+                            <!-- Employee -->
+                            <td>
+                                {% if incident.employee %}
+                                    <div>
+                                        {{ incident.employee.first_name }}
+                                        {{ incident.employee.last_name }}
+                                    </div>
+
+                                    <small class="text-muted">
+                                        {{ incident.employee.employee_number }}
+                                    </small>
+                                {% else %}
+                                    <span class="text-muted">Unassigned</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Door -->
+                            <td>
+                                {% if incident.door %}
+                                    {{ incident.door.name }}
+                                {% else %}
+                                    <span class="text-muted">Not specified</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Severity -->
+                            <td>
+                                {% if incident.severity == "critical" %}
+                                    <span class="badge bg-danger">Critical</span>
+                                {% elif incident.severity == "high" %}
+                                    <span class="badge bg-warning text-dark">High</span>
+                                {% elif incident.severity == "medium" %}
+                                    <span class="badge bg-info text-dark">Medium</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Low</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Status -->
+                            <td>
+                                {% if incident.status == "open" %}
+                                    <span class="badge bg-danger">Open</span>
+                                {% elif incident.status == "investigating" %}
+                                    <span class="badge bg-warning text-dark">
+                                        Investigating
+                                    </span>
+                                {% elif incident.status == "resolved" %}
+                                    <span class="badge bg-success">Resolved</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Closed</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Reported Date -->
+                            <td class="text-nowrap">
+                                <small>
+                                    {{ incident.reported_at|date:"M d, Y H:i" }}
+                                </small>
+                            </td>
+
+                            <!-- Actions -->
+                            <td class="text-end text-nowrap">
+
+                                <a
+                                    href="{% url 'incidents:incident_detail' incident.pk %}"
+                                    class="btn btn-sm btn-outline-primary"
+                                    title="View incident"
+                                    aria-label="View incident #{{ incident.pk }}"
+                                >
+                                    <i class="bi bi-eye"></i>
+                                    View
+                                </a>
+
+                                {% if incident.status != "closed" %}
+                                    <a
+                                        href="{% url 'incidents:incident_edit' incident.pk %}"
+                                        class="btn btn-sm btn-outline-secondary"
+                                        title="Edit incident"
+                                        aria-label="Edit incident #{{ incident.pk }}"
+                                    >
+                                        <i class="bi bi-pencil"></i>
+                                        Edit
+                                    </a>
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-5">
+
+                                <i class="bi bi-shield-check fs-1 text-muted"></i>
+
+                                <h5 class="mt-3">No incidents found</h5>
+
+                                <p class="text-muted mb-0">
+                                    There are no incidents matching your filters.
+                                </p>
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

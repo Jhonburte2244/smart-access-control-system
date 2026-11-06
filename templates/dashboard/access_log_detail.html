@@ -1,0 +1,240 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+Access Log Details
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold">
+                <i class="bi bi-journal-text me-2"></i>
+                Access Log Details
+            </h2>
+
+            <p class="text-muted mb-0">
+                Access event #{{ log.id }}
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'logs:access_logs' %}"
+            class="btn btn-outline-secondary"
+        >
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Logs
+        </a>
+
+    </div>
+
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <div class="row g-4">
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Employee
+                    </label>
+
+                    <div class="fs-5 fw-semibold">
+
+                        {{ log.employee.employee_number }}
+
+                        —
+                        {{ log.employee.first_name }}
+                        {{ log.employee.last_name }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Door
+                    </label>
+
+                    <div class="fs-5 fw-semibold">
+
+                        {{ log.door.name }}
+
+                        <small class="text-muted">
+                            ({{ log.door.door_code }})
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Authentication Method
+                    </label>
+
+                    <div class="fs-5">
+                        {{ log.authentication_method }}
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Action
+                    </label>
+
+                    <div>
+
+                        {% if log.action|lower == "granted" %}
+
+                            <span class="badge bg-success fs-6">
+                                {{ log.action }}
+                            </span>
+
+                        {% elif log.action|lower == "denied" %}
+
+                            <span class="badge bg-danger fs-6">
+                                {{ log.action }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-secondary fs-6">
+                                {{ log.action }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-12">
+
+                    <label class="text-muted small">
+                        Reason
+                    </label>
+
+                    <div class="fs-5">
+
+                        {% if log.reason %}
+                            {{ log.reason }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="text-muted small">
+                        Confidence Score
+                    </label>
+
+                    <div class="fs-5">
+
+                        {% if log.confidence_score %}
+                            {{ log.confidence_score }}%
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="text-muted small">
+                        IP Address
+                    </label>
+
+                    <div class="fs-5">
+
+                        {% if log.ip_address %}
+                            {{ log.ip_address }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <label class="text-muted small">
+                        RFID Card
+                    </label>
+
+                    <div class="fs-5">
+
+                        {% if log.rfid_card %}
+                            {{ log.rfid_card }}
+                        {% else %}
+                            —
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Event Time
+                    </label>
+
+                    <div class="fs-5">
+
+                        {{ log.event_time|date:"Y-m-d H:i:s" }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-6">
+
+                    <label class="text-muted small">
+                        Created At
+                    </label>
+
+                    <div class="fs-5">
+
+                        {{ log.created_at|date:"Y-m-d H:i:s" }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

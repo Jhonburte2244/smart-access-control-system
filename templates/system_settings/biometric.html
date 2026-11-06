@@ -1,0 +1,347 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Biometric Settings | Smart Access Control System
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                Biometric Settings
+            </h2>
+            <p class="text-muted mb-0">
+                Configure fingerprint and face recognition settings.
+            </p>
+        </div>
+
+        <a href="{% url 'system_settings:home' %}"
+           class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Settings
+        </a>
+    </div>
+
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Biometric Status -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-fingerprint text-info me-2"></i>
+                    Biometric Authentication Status
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="is_active"
+                        id="is_active"
+                        checked
+                    >
+
+                    <label class="form-check-label fw-semibold"
+                           for="is_active">
+                        Enable Biometric Authentication
+                    </label>
+
+                    <div class="form-text">
+                        Enable or disable biometric authentication throughout
+                        the Smart Access Control System.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Fingerprint Settings -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-fingerprint text-primary me-2"></i>
+                    Fingerprint Authentication
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch mb-3">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="fingerprint_enabled"
+						{% if settings.fingerprint_enabled %}checked{% endif %}
+                        id="fingerprint_enabled"
+                        checked
+                    >
+
+                    <label class="form-check-label fw-semibold"
+                           for="fingerprint_enabled">
+                        Enable Fingerprint Authentication
+                    </label>
+
+                    <div class="form-text">
+                        Allow employees to authenticate using registered
+                        fingerprints.
+                    </div>
+                </div>
+
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <label for="fingerprint_match_threshold"
+                               class="form-label fw-semibold">
+                            Fingerprint Match Threshold
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="fingerprint_match_threshold"
+                            id="fingerprint_match_threshold"
+                            value="{{ settings.fingerprint_match_threshold }}"
+                            min="0"
+                            max="100"
+                        >
+
+                        <div class="form-text">
+                            Minimum confidence level required for a
+                            successful fingerprint match.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label for="fingerprint_timeout"
+                               class="form-label fw-semibold">
+                            Fingerprint Scan Timeout (seconds)
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="fingerprint_timeout"
+                            id="fingerprint_timeout"
+                            value="10"
+                            min="1"
+                            max="60"
+                        >
+
+                        <div class="form-text">
+                            Maximum time allowed for a fingerprint scan.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Face Recognition -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-person-bounding-box text-success me-2"></i>
+                    Face Recognition
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch mb-3">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="face_enabled"
+                        id="face_enabled"
+                    >
+
+                    <label class="form-check-label fw-semibold"
+                           for="face_enabled">
+                        Enable Face Recognition
+                    </label>
+
+                    <div class="form-text">
+                        Allow employees to authenticate using registered
+                        face templates.
+                    </div>
+                </div>
+
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <label for="face_match_threshold"
+                               class="form-label fw-semibold">
+                            Face Match Threshold
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="face_match_threshold"
+                            id="face_match_threshold"
+                            value="70"
+                            min="0"
+                            max="100"
+                        >
+
+                        <div class="form-text">
+                            Minimum confidence level required for a
+                            successful face match.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label for="face_scan_timeout"
+                               class="form-label fw-semibold">
+                            Face Scan Timeout (seconds)
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="face_scan_timeout"
+                            id="face_scan_timeout"
+                            value="10"
+                            min="1"
+                            max="60"
+                        >
+
+                        <div class="form-text">
+                            Maximum time allowed for face recognition.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Enrollment Settings -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-person-plus text-warning me-2"></i>
+                    Biometric Enrollment
+                </h5>
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="allow_enrollment"
+                        id="allow_enrollment"
+                        checked
+                    >
+
+                    <label class="form-check-label fw-semibold"
+                           for="allow_enrollment">
+                        Allow Biometric Enrollment
+                    </label>
+
+                    <div class="form-text">
+                        Allow authorized administrators to register new
+                        fingerprint and face templates.
+                    </div>
+
+                </div>
+
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="require_employee"
+                        id="require_employee"
+                        checked
+                    >
+
+                    <label class="form-check-label fw-semibold"
+                           for="require_employee">
+                        Require Employee Registration
+                    </label>
+
+                    <div class="form-text">
+                        Biometric templates must be associated with an
+                        existing employee record.
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Information -->
+        <div class="alert alert-info shadow-sm">
+
+            <div class="d-flex">
+
+                <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+
+                <div>
+                    <strong>Biometric Security</strong>
+
+                    <p class="mb-0 mt-1">
+                        Fingerprint and face authentication should only be
+                        enabled when the corresponding biometric devices
+                        and employee templates are properly configured.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Save -->
+        <div class="d-flex justify-content-end mb-4">
+
+            <button type="submit"
+                    class="btn btn-primary px-4">
+
+                <i class="bi bi-save me-1"></i>
+                Save Biometric Settings
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

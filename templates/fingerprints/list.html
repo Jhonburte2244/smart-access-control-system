@@ -1,0 +1,506 @@
+
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Fingerprints
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+
+    <!-- Header -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+                Fingerprints
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage employee fingerprint records
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'fingerprints:fingerprint_add' %}"
+            class="btn btn-primary"
+        >
+
+            <i class="bi bi-plus-lg"></i>
+            Add Fingerprint
+
+        </a>
+
+    </div>
+
+
+    <!-- Messages -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div
+                class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                role="alert"
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- Statistics -->
+
+    <div class="row g-3 mb-4">
+
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <div class="text-muted">
+                        Total Fingerprints
+                    </div>
+
+                    <h3 class="fw-bold mb-0">
+                        {{ total_fingerprints }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <div class="text-muted">
+                        Active
+                    </div>
+
+                    <h3 class="fw-bold text-success mb-0">
+                        {{ active_fingerprints }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body">
+
+                    <div class="text-muted">
+                        Inactive
+                    </div>
+
+                    <h3 class="fw-bold text-secondary mb-0">
+                        {{ inactive_fingerprints }}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- Search -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <form method="get">
+
+                <div class="input-group">
+
+                    <span class="input-group-text">
+
+                        <i class="bi bi-search"></i>
+
+                    </span>
+
+                    <input
+                        type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Search employee, finger, sensor or status..."
+                        value="{{ search }}"
+                    >
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Search
+                    </button>
+
+                    {% if search %}
+
+                        <a
+                            href="{% url 'fingerprints:fingerprint_list' %}"
+                            class="btn btn-secondary"
+                        >
+                            Clear
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Table -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Employee</th>
+
+                            <th>Finger</th>
+
+                            <th>Sensor</th>
+
+                            <th>Index</th>
+
+                            <th>Quality</th>
+
+                            <th>Status</th>
+
+                            <th class="text-end">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for fingerprint in fingerprints %}
+
+                            <tr>
+
+
+                                <!-- ID -->
+
+                                <td>
+
+                                    <strong>
+                                        {{ fingerprint.id }}
+                                    </strong>
+
+                                </td>
+
+
+                                <!-- Employee -->
+
+                                <td>
+
+                                    {% if fingerprint.employee %}
+
+                                        <div class="fw-semibold">
+
+                                            {{ fingerprint.employee.employee_number }}
+
+                                        </div>
+
+                                        <small class="text-muted">
+
+                                            {{ fingerprint.employee.first_name }}
+                                            {{ fingerprint.employee.middle_name }}
+                                            {{ fingerprint.employee.last_name }}
+
+                                        </small>
+
+                                    {% else %}
+
+                                        <span class="text-muted">
+                                            Unassigned
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- Finger -->
+
+                                <td>
+
+                                    {{ fingerprint.finger_name|default:"-" }}
+
+                                </td>
+
+
+                                <!-- Sensor -->
+
+                                <td>
+
+                                    {{ fingerprint.sensor_type|default:"-" }}
+
+                                </td>
+
+
+                                <!-- Index -->
+
+                                <td>
+
+                                    {{ fingerprint.fingerprint_index|default:"-" }}
+
+                                </td>
+
+
+                                <!-- Quality -->
+
+                                <td>
+
+                                    {% if fingerprint.quality_score != None %}
+
+                                        <span class="badge bg-info text-dark">
+
+                                            {{ fingerprint.quality_score }}%
+
+                                        </span>
+
+                                    {% else %}
+
+                                        -
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- Status -->
+
+                                <td>
+
+                                    {% if fingerprint.status|lower == "active" %}
+
+                                        <span class="badge bg-success">
+
+                                            Active
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-secondary">
+
+                                            {{ fingerprint.status }}
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- Actions -->
+
+                                <td class="text-end">
+
+                                    <div class="btn-group">
+
+
+                                        <!-- View -->
+
+                                        <a
+                                            href="{% url 'fingerprints:fingerprint_detail' fingerprint.id %}"
+                                            class="btn btn-sm btn-outline-info"
+                                            title="View"
+                                        >
+
+                                            <i class="bi bi-eye"></i>
+
+                                        </a>
+
+
+                                        <!-- Edit -->
+
+                                        <a
+                                            href="{% url 'fingerprints:fingerprint_edit' fingerprint.id %}"
+                                            class="btn btn-sm btn-outline-primary"
+                                            title="Edit"
+                                        >
+
+                                            <i class="bi bi-pencil"></i>
+
+                                        </a>
+
+
+                                        <!-- Activate / Deactivate -->
+
+                                        <form
+                                            method="post"
+                                            action="{% url 'fingerprints:fingerprint_toggle_status' fingerprint.id %}"
+                                            style="display:inline;"
+                                        >
+
+                                            {% csrf_token %}
+
+                                            {% if fingerprint.status|lower == "active" %}
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-outline-warning"
+                                                    title="Deactivate"
+                                                    onclick="return confirm('Deactivate this fingerprint?');"
+                                                >
+
+                                                    <i class="bi bi-pause-circle"></i>
+
+                                                </button>
+
+                                            {% else %}
+
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-outline-success"
+                                                    title="Activate"
+                                                    onclick="return confirm('Activate this fingerprint?');"
+                                                >
+
+                                                    <i class="bi bi-check-circle"></i>
+
+                                                </button>
+
+                                            {% endif %}
+
+                                        </form>
+
+
+                                        <!-- Delete -->
+
+                                        <form
+                                            method="post"
+                                            action="{% url 'fingerprints:fingerprint_delete' fingerprint.id %}"
+                                            style="display:inline;"
+                                        >
+
+                                            {% csrf_token %}
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                                title="Delete"
+                                                onclick="return confirm('Are you sure you want to delete this fingerprint?');"
+                                            >
+
+                                                <i class="bi bi-trash"></i>
+
+                                            </button>
+
+                                        </form>
+
+
+                                    </div>
+
+                                </td>
+
+
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+
+                                <td
+                                    colspan="8"
+                                    class="text-center py-5"
+                                >
+
+                                    <i
+                                        class="bi bi-fingerprint fs-1 text-muted"
+                                    ></i>
+
+                                    <h5 class="mt-3">
+                                        No fingerprints found
+                                    </h5>
+
+                                    <p class="text-muted">
+                                        Add a fingerprint to get started.
+                                    </p>
+
+                                    <a
+                                        href="{% url 'fingerprints:fingerprint_add' %}"
+                                        class="btn btn-primary"
+                                    >
+
+                                        <i class="bi bi-plus-lg"></i>
+                                        Add Fingerprint
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}
+

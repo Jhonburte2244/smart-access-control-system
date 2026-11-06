@@ -1,0 +1,293 @@
+
+{% extends "dashboard/base.html" %}
+
+{% block title %}Incident #{{ incident.id }} | SMAC{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">
+                Incident #{{ incident.id }}
+            </h2>
+            <p class="text-muted mb-0">
+                Incident details and resolution
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+            {% if incident.status != "closed" %}
+                <a href="{% url 'incidents:incident_edit' incident.id %}"
+                   class="btn btn-outline-primary">
+                    <i class="bi bi-pencil me-1"></i>
+                    Edit
+                </a>
+            {% endif %}
+
+            <a href="{% url 'incidents:incident_list' %}"
+               class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i>
+                Back
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Main Incident Information -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Incident Information
+                    </h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="row g-4">
+
+                        <!-- Incident Type -->
+                        <div class="col-md-6">
+                            <label class="text-muted small">
+                                Incident Type
+                            </label>
+                            <div class="fw-semibold fs-5">
+                                {{ incident.incident_type }}
+                            </div>
+                        </div>
+
+                        <!-- Severity -->
+                        <div class="col-md-3">
+                            <label class="text-muted small">
+                                Severity
+                            </label>
+                            <div class="mt-1">
+                                {% if incident.severity == "critical" %}
+                                    <span class="badge bg-danger">
+                                        Critical
+                                    </span>
+                                {% elif incident.severity == "high" %}
+                                    <span class="badge bg-warning text-dark">
+                                        High
+                                    </span>
+                                {% elif incident.severity == "medium" %}
+                                    <span class="badge bg-info text-dark">
+                                        Medium
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        Low
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <div class="col-md-3">
+                            <label class="text-muted small">
+                                Status
+                            </label>
+                            <div class="mt-1">
+                                {% if incident.status == "open" %}
+                                    <span class="badge bg-danger">
+                                        Open
+                                    </span>
+                                {% elif incident.status == "investigating" %}
+                                    <span class="badge bg-warning text-dark">
+                                        Investigating
+                                    </span>
+                                {% elif incident.status == "resolved" %}
+                                    <span class="badge bg-success">
+                                        Resolved
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary">
+                                        Closed
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Employee -->
+                        <div class="col-md-6">
+                            <label class="text-muted small">
+                                Employee
+                            </label>
+
+                            {% if incident.employee %}
+                                <div class="fw-semibold">
+                                    {{ incident.employee.first_name }}
+                                    {{ incident.employee.last_name }}
+                                </div>
+                                <small class="text-muted">
+                                    {{ incident.employee.employee_number }}
+                                </small>
+                            {% else %}
+                                <div class="text-muted">
+                                    Not specified
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Door -->
+                        <div class="col-md-6">
+                            <label class="text-muted small">
+                                Door
+                            </label>
+
+                            {% if incident.door %}
+                                <div class="fw-semibold">
+                                    {{ incident.door.name }}
+                                </div>
+
+                                {% if incident.door.location %}
+                                    <small class="text-muted">
+                                        {{ incident.door.location }}
+                                    </small>
+                                {% endif %}
+                            {% else %}
+                                <div class="text-muted">
+                                    Not specified
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Description -->
+                        <div class="col-12">
+                            <label class="text-muted small">
+                                Description
+                            </label>
+
+                            <div class="border rounded p-3 mt-1">
+                                {% if incident.description %}
+                                    {{ incident.description|linebreaks }}
+                                {% else %}
+                                    <span class="text-muted">
+                                        No description provided.
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Timeline and Actions -->
+        <div class="col-lg-4">
+
+            <!-- Timeline -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-clock-history me-2"></i>
+                        Timeline
+                    </h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="mb-3">
+                        <small class="text-muted">Reported</small>
+                        <div class="fw-semibold">
+                            {{ incident.reported_at|date:"M d, Y H:i:s" }}
+                        </div>
+                    </div>
+
+                    <div>
+                        <small class="text-muted">Resolved</small>
+
+                        {% if incident.resolved_at %}
+                            <div class="fw-semibold">
+                                {{ incident.resolved_at|date:"M d, Y H:i:s" }}
+                            </div>
+                        {% else %}
+                            <div class="text-muted">
+                                Not resolved
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Incident Actions -->
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">
+                        <i class="bi bi-gear me-2"></i>
+                        Incident Actions
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    {% if incident.status == "open" %}
+
+                        <p class="text-muted small">
+                            This incident is awaiting investigation.
+                        </p>
+
+                        <form method="post"
+                              action="{% url 'incidents:incident_investigate' incident.pk %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn btn-primary w-100">
+                                <i class="bi bi-search me-1"></i>
+                                Start Investigation
+                            </button>
+                        </form>
+
+                    {% elif incident.status == "investigating" %}
+
+                        <p class="text-muted small">
+                            Investigation is in progress. Mark the incident
+                            resolved when the investigation is complete.
+                        </p>
+
+                        <form method="post"
+                              action="{% url 'incidents:incident_resolve' incident.pk %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn btn-success w-100">
+                                <i class="bi bi-check-circle me-1"></i>
+                                Mark as Resolved
+                            </button>
+                        </form>
+
+                    {% elif incident.status == "resolved" %}
+
+                        <p class="text-muted small">
+                            This incident is resolved and ready to be closed.
+                        </p>
+
+                        <form method="post"
+                              action="{% url 'incidents:incident_close' incident.pk %}">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="btn btn-secondary w-100">
+                                <i class="bi bi-lock me-1"></i>
+                                Close Incident
+                            </button>
+                        </form>
+
+                    {% elif incident.status == "closed" %}
+
+                        <div class="alert alert-secondary mb-0">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            This incident is closed. No further status
+                            actions are available.
+                        </div>
+
+                    {% endif %}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+Django==5.2.*
+djangorestframework==3.16.*
+django-allauth
+django-jazzmin
+django-import-export
+psycopg[binary]
+Pillow
+requests
+python-dotenv
+gunicorn
+waitress

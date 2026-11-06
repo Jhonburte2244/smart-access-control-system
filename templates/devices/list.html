@@ -1,0 +1,464 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Devices | Smart Access Control System
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-cpu me-2"></i>
+                Devices
+            </h2>
+
+            <p class="text-muted mb-0">
+                Manage ESP32 access control devices
+            </p>
+        </div>
+
+        <a href="{% url 'devices:device_add' %}"
+           class="btn btn-primary">
+
+            <i class="bi bi-plus-circle me-1"></i>
+            Register Device
+
+        </a>
+
+    </div>
+
+
+    <!-- Statistics -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Total Devices
+                            </small>
+
+                            <h3 class="fw-bold mb-0">
+                                {{ total_devices }}
+                            </h3>
+                        </div>
+
+                        <div class="text-primary fs-2">
+                            <i class="bi bi-cpu"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Active Devices
+                            </small>
+
+                            <h3 class="fw-bold text-success mb-0">
+                                {{ active_devices }}
+                            </h3>
+                        </div>
+
+                        <div class="text-success fs-2">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+                            <small class="text-muted">
+                                Inactive Devices
+                            </small>
+
+                            <h3 class="fw-bold text-danger mb-0">
+                                {{ inactive_devices }}
+                            </h3>
+                        </div>
+
+                        <div class="text-danger fs-2">
+                            <i class="bi bi-x-circle"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Search -->
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-body">
+
+            <form method="get"
+                  class="row g-2">
+
+                <div class="col-md-6">
+
+                    <input type="text"
+                           name="search"
+                           value="{{ search }}"
+                           class="form-control"
+                           placeholder="Search device...">
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <select name="status"
+                            class="form-select">
+
+                        <option value="">
+                            All Status
+                        </option>
+
+                        <option value="active"
+                            {% if status == "active" %}selected{% endif %}>
+                            Active
+                        </option>
+
+                        <option value="inactive"
+                            {% if status == "inactive" %}selected{% endif %}>
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3 d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary flex-fill">
+
+                        <i class="bi bi-search"></i>
+                        Search
+
+                    </button>
+
+                    <a href="{% url 'devices:device_list' %}"
+                       class="btn btn-outline-secondary">
+
+                        <i class="bi bi-arrow-clockwise"></i>
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- Device Table -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="mb-0 fw-bold">
+                Registered Devices
+            </h5>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>Device</th>
+
+                            <th>Type</th>
+
+                            <th>Location</th>
+
+                            <th>Network</th>
+
+                            <th>Status</th>
+
+                            <th>Last Seen</th>
+
+                            <th class="text-end">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for device in devices %}
+
+                        <tr>
+
+                            <td>
+
+                                <div class="fw-semibold">
+                                    {{ device.device_code }}
+                                </div>
+
+                                <small class="text-muted">
+                                    {{ device.device_name }}
+                                </small>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="badge bg-primary-subtle text-primary">
+
+                                    <i class="bi bi-cpu me-1"></i>
+
+                                    {{ device.device_type }}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {{ device.location|default:"—" }}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if device.ip_address %}
+
+                                    <div>
+                                        <i class="bi bi-wifi me-1"></i>
+                                        {{ device.ip_address }}
+                                    </div>
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if device.is_active %}
+
+                                    <span class="badge bg-success">
+
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        Active
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+
+                                        <i class="bi bi-x-circle me-1"></i>
+                                        Inactive
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if device.last_seen %}
+
+                                    {{ device.last_seen|date:"Y-m-d H:i:s" }}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        Never
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td class="text-end">
+
+                                <div class="btn-group">
+
+                                    <a href="{% url 'devices:device_detail' device.id %}"
+                                       class="btn btn-sm btn-outline-primary"
+                                       title="View">
+
+                                        <i class="bi bi-eye"></i>
+
+                                    </a>
+
+
+                                    <a href="{% url 'devices:device_edit' device.id %}"
+                                       class="btn btn-sm btn-outline-secondary"
+                                       title="Edit">
+
+                                        <i class="bi bi-pencil"></i>
+
+                                    </a>
+
+
+                                    <form method="post"
+                                          action="{% url 'devices:device_toggle_status' device.id %}"
+                                          class="d-inline">
+
+                                        {% csrf_token %}
+
+                                        {% if device.is_active %}
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-warning"
+                                                    title="Deactivate">
+
+                                                <i class="bi bi-pause-circle"></i>
+
+                                            </button>
+
+                                        {% else %}
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-success"
+                                                    title="Activate">
+
+                                                <i class="bi bi-play-circle"></i>
+
+                                            </button>
+
+                                        {% endif %}
+
+                                    </form>
+
+
+                                    <form method="post"
+                                          action="{% url 'devices:device_delete' device.id %}"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Delete this device?');">
+
+                                        {% csrf_token %}
+
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger"
+                                                title="Delete">
+
+                                            <i class="bi bi-trash"></i>
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td colspan="7"
+                                class="text-center py-5">
+
+                                <i class="bi bi-cpu fs-1 text-muted"></i>
+
+                                <h5 class="mt-3">
+                                    No devices registered
+                                </h5>
+
+                                <p class="text-muted">
+                                    Register your first ESP32 device.
+                                </p>
+
+                                <a href="{% url 'devices:device_add' %}"
+                                   class="btn btn-primary">
+
+                                    <i class="bi bi-plus-circle me-1"></i>
+                                    Register Device
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

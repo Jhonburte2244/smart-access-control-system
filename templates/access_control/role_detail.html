@@ -1,0 +1,185 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Role Details
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-white py-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <h4 class="fw-bold mb-0">
+
+                            <i class="bi bi-person-badge me-2"></i>
+                            Role Details
+
+                        </h4>
+
+                        {% if role.is_active %}
+
+                            <span class="badge bg-success">
+                                Active
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-secondary">
+                                Inactive
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-body p-4">
+
+                    <div class="row mb-3">
+
+                        <div class="col-sm-4 text-muted">
+                            Role ID
+                        </div>
+
+                        <div class="col-sm-8 fw-semibold">
+                            {{ role.id }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="row mb-3">
+
+                        <div class="col-sm-4 text-muted">
+                            Role Name
+                        </div>
+
+                        <div class="col-sm-8 fw-semibold">
+                            {{ role.name }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="row mb-3">
+
+                        <div class="col-sm-4 text-muted">
+                            Description
+                        </div>
+
+                        <div class="col-sm-8">
+
+                            {% if role.description %}
+                                {{ role.description }}
+                            {% else %}
+                                <span class="text-muted">
+                                    No description
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row mb-3">
+
+                        <div class="col-sm-4 text-muted">
+                            Created
+                        </div>
+
+                        <div class="col-sm-8">
+
+                            {% if role.created_at %}
+                                {{ role.created_at|date:"Y-m-d H:i:s" }}
+                            {% else %}
+                                —
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row mb-4">
+
+                        <div class="col-sm-4 text-muted">
+                            Last Updated
+                        </div>
+
+                        <div class="col-sm-8">
+
+                            {% if role.updated_at %}
+                                {{ role.updated_at|date:"Y-m-d H:i:s" }}
+                            {% else %}
+                                —
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="d-flex gap-2">
+
+                        <a
+                            href="{% url 'access_control:roles' %}"
+                            class="btn btn-secondary"
+                        >
+                            <i class="bi bi-arrow-left me-1"></i>
+                            Back
+                        </a>
+
+                        <a
+                            href="{% url 'access_control:role_edit' role.id %}"
+                            class="btn btn-primary"
+                        >
+                            <i class="bi bi-pencil me-1"></i>
+                            Edit
+                        </a>
+
+                        <a
+                            href="{% url 'access_control:role_toggle_status' role.id %}"
+                            class="btn btn-warning"
+                        >
+                            {% if role.is_active %}
+                                <i class="bi bi-toggle-off me-1"></i>
+                                Deactivate
+                            {% else %}
+                                <i class="bi bi-toggle-on me-1"></i>
+                                Activate
+                            {% endif %}
+                        </a>
+
+                        <a
+                            href="{% url 'access_control:role_delete' role.id %}"
+                            class="btn btn-danger"
+                        >
+                            <i class="bi bi-trash me-1"></i>
+                            Delete
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

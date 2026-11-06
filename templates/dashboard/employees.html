@@ -1,0 +1,609 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Employees - Smart Access Control System
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-people me-2"></i>
+
+                Employees
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Manage employees and access-control identities
+
+            </p>
+
+        </div>
+
+
+        <!-- ADD EMPLOYEE BUTTON -->
+
+        <a
+            href="{% url 'employees:employee_add' %}"
+            class="btn btn-primary"
+        >
+
+            <i class="bi bi-person-plus me-1"></i>
+
+            Add Employee
+
+        </a>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         EMPLOYEE SUMMARY CARDS
+    ========================================================== -->
+
+    <div class="row g-3 mb-4">
+
+
+        <!-- TOTAL EMPLOYEES -->
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body d-flex align-items-center">
+
+                    <div
+                        class="rounded-circle bg-primary-subtle
+                               d-flex align-items-center justify-content-center
+                               me-3"
+                        style="width: 55px; height: 55px;"
+                    >
+
+                        <i
+                            class="bi bi-people text-primary"
+                            style="font-size: 25px;"
+                        ></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <small class="text-muted">
+                            Total Employees
+                        </small>
+
+                        <h3 class="fw-bold mb-0">
+                            {{ employees|length }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACTIVE EMPLOYEES -->
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body d-flex align-items-center">
+
+                    <div
+                        class="rounded-circle bg-success-subtle
+                               d-flex align-items-center justify-content-center
+                               me-3"
+                        style="width: 55px; height: 55px;"
+                    >
+
+                        <i
+                            class="bi bi-person-check text-success"
+                            style="font-size: 25px;"
+                        ></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <small class="text-muted">
+                            Active Employees
+                        </small>
+
+                        <h3 class="fw-bold mb-0">
+
+                            {% with active_count=0 %}
+
+                                {% for employee in employees %}
+
+                                    {% if employee.status|lower == "active" %}
+
+                                    {% endif %}
+
+                                {% endfor %}
+
+                            {% endwith %}
+
+                            {{ active_employees|default:"0" }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- INACTIVE EMPLOYEES -->
+
+        <div class="col-md-4">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body d-flex align-items-center">
+
+                    <div
+                        class="rounded-circle bg-secondary-subtle
+                               d-flex align-items-center justify-content-center
+                               me-3"
+                        style="width: 55px; height: 55px;"
+                    >
+
+                        <i
+                            class="bi bi-person-x text-secondary"
+                            style="font-size: 25px;"
+                        ></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <small class="text-muted">
+                            Inactive Employees
+                        </small>
+
+                        <h3 class="fw-bold mb-0">
+                            {{ inactive_employees|default:"0" }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         EMPLOYEE LIST CARD
+    ========================================================== -->
+
+    <div class="card shadow-sm border-0">
+
+
+        <!-- CARD HEADER -->
+
+        <div class="card-header bg-white py-3">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h5 class="fw-bold mb-0">
+
+                    <i class="bi bi-list-ul me-2"></i>
+
+                    Employee List
+
+                </h5>
+
+
+                <span class="badge bg-primary">
+
+                    {{ employees|length }}
+
+                    Employee{{ employees|length|pluralize }}
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CARD BODY -->
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+
+                <table
+                    class="table table-hover align-middle mb-0"
+                >
+
+
+                    <!-- =================================================
+                         TABLE HEADER
+                    ================================================== -->
+
+                    <thead class="table-light">
+
+                        <tr>
+
+
+                            <!-- EMPLOYEE NUMBER -->
+
+                            <th class="px-3">
+
+                                Employee Number
+
+                            </th>
+
+
+                            <!-- EMPLOYEE ID -->
+
+                            <th>
+
+                                ID
+
+                            </th>
+
+
+                            <!-- FULL NAME -->
+
+                            <th>
+
+                                Full Name
+
+                            </th>
+
+
+                            <!-- EMAIL -->
+
+                            <th>
+
+                                Email
+
+                            </th>
+
+
+                            <!-- PHONE -->
+
+                            <th>
+
+                                Phone
+
+                            </th>
+
+
+                            <!-- STATUS -->
+
+                            <th>
+
+                                Status
+
+                            </th>
+
+
+                            <!-- ACTIONS -->
+
+                            <th class="text-center">
+
+                                Actions
+
+                            </th>
+
+
+                        </tr>
+
+                    </thead>
+
+
+
+                    <!-- =================================================
+                         TABLE BODY
+                    ================================================== -->
+
+                    <tbody>
+
+
+                    {% for employee in employees %}
+
+
+                        <tr>
+
+
+                            <!-- =========================================
+                                 EMPLOYEE NUMBER
+                            ========================================== -->
+
+                            <td class="px-3">
+
+                                <strong>
+
+                                    {{ employee.employee_number }}
+
+                                </strong>
+
+                            </td>
+
+
+
+                            <!-- =========================================
+                                 EMPLOYEE ID
+                            ========================================== -->
+
+                            <td>
+
+                                <strong>
+
+                                    {{ employee.employee_id }}
+
+                                </strong>
+
+                            </td>
+
+
+
+                            <!-- =========================================
+                                 FULL NAME
+                            ========================================== -->
+
+                            <td>
+
+                                <strong>
+
+                                    {{ employee.first_name }}
+
+                                    {% if employee.middle_name %}
+
+                                        {{ employee.middle_name }}
+
+                                    {% endif %}
+
+                                    {{ employee.last_name }}
+
+                                </strong>
+
+                            </td>
+
+
+
+                            <!-- =========================================
+                                 EMAIL
+                            ========================================== -->
+
+                            <td>
+
+                                {% if employee.email %}
+
+                                    {{ employee.email }}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <!-- =========================================
+                                 PHONE
+                            ========================================== -->
+
+                            <td>
+
+                                {% if employee.phone %}
+
+                                    {{ employee.phone }}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <!-- =========================================
+                                 STATUS
+                            ========================================== -->
+
+                            <td>
+
+                                {% if employee.status|lower == "active" %}
+
+                                    <span class="badge bg-success">
+
+                                        <i
+                                            class="bi bi-check-circle me-1"
+                                        ></i>
+
+                                        Active
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+
+                                        {{ employee.status|title }}
+
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+
+                            <!-- =========================================
+                                 ACTIONS
+                            ========================================== -->
+
+                            <td class="text-center">
+
+                                <div
+                                    class="d-inline-flex
+                                           justify-content-center
+                                           gap-1"
+                                >
+
+
+                                    <!-- VIEW -->
+
+                                    <a
+                                        href="{% url 'employees:employee_detail' employee.id %}"
+                                        class="btn btn-sm btn-outline-primary"
+                                    >
+
+                                        View
+
+                                    </a>
+
+
+
+                                    <!-- EDIT -->
+
+                                    <a
+                                        href="{% url 'employees:employee_edit' employee.id %}"
+                                        class="btn btn-sm btn-outline-secondary"
+                                    >
+
+                                        Edit
+
+                                    </a>
+
+
+
+                                    <!-- DELETE -->
+
+                                    <a
+                                        href="{% url 'employees:employee_delete' employee.id %}"
+                                        class="btn btn-sm btn-outline-danger"
+                                    >
+
+                                        Delete
+
+                                    </a>
+
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+
+                    {% empty %}
+
+
+                        <!-- =============================================
+                             NO EMPLOYEES
+                        ============================================== -->
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="text-center py-5"
+                            >
+
+
+                                <div class="mb-3">
+
+                                    <i
+                                        class="bi bi-people text-muted"
+                                        style="font-size: 50px;"
+                                    ></i>
+
+                                </div>
+
+
+                                <h5 class="fw-bold">
+
+                                    No Employees Found
+
+                                </h5>
+
+
+                                <p class="text-muted">
+
+                                    There are currently no employees
+                                    registered in the system.
+
+                                </p>
+
+
+                                <a
+                                    href="{% url 'employees:employee_add' %}"
+                                    class="btn btn-primary"
+                                >
+
+                                    <i
+                                        class="bi bi-person-plus me-1"
+                                    ></i>
+
+                                    Add Employee
+
+                                </a>
+
+
+                            </td>
+
+                        </tr>
+
+
+                    {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,2225 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#0f172a">
+
+<title>
+    {% block title %}
+        Smart Access Control System
+    {% endblock %}
+</title>
+
+
+<!-- =========================================================
+     FONTS
+========================================================== -->
+
+<link rel="preconnect"
+      href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
+
+
+<!-- =========================================================
+     BOOTSTRAP
+========================================================== -->
+
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+>
+
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+>
+
+
+<!-- =========================================================
+     GLOBAL SACS DESIGN SYSTEM
+========================================================== -->
+
+<style>
+
+    :root {
+
+        /* Brand */
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --primary-light: #eff6ff;
+
+        /* Status */
+        --success: #16a34a;
+        --success-light: #f0fdf4;
+
+        --danger: #dc2626;
+        --danger-light: #fef2f2;
+
+        --warning: #d97706;
+        --warning-light: #fffbeb;
+
+        --info: #0891b2;
+        --info-light: #ecfeff;
+
+        /* Sidebar */
+        --sidebar-bg: #0b1220;
+        --sidebar-bg-2: #111827;
+        --sidebar-width: 270px;
+
+        /* Layout */
+        --topbar-height: 72px;
+
+        /* Surfaces */
+        --body-bg: #f5f7fb;
+        --card-bg: #ffffff;
+
+        /* Text */
+        --text-dark: #172033;
+        --text-primary: #334155;
+        --text-muted: #64748b;
+        --text-light: #94a3b8;
+
+        /* Borders */
+        --border-color: #e5e7eb;
+        --border-light: #eef2f7;
+
+        /* Radius */
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+
+        /* Shadows */
+        --shadow-sm:
+            0 1px 2px rgba(15, 23, 42, .04);
+
+        --shadow-md:
+            0 5px 18px rgba(15, 23, 42, .07);
+
+        --shadow-lg:
+            0 12px 35px rgba(15, 23, 42, .10);
+
+        /* Transition */
+        --transition:
+            all .2s ease;
+    }
+
+
+    /* =====================================================
+       GLOBAL
+    ====================================================== */
+
+    * {
+        box-sizing: border-box;
+    }
+
+
+    html {
+        min-height: 100%;
+    }
+
+
+    body {
+
+        margin: 0;
+
+        min-height: 100vh;
+
+        background:
+            linear-gradient(
+                135deg,
+                #f8fafc 0%,
+                #f1f5f9 100%
+            );
+
+        color: var(--text-dark);
+
+        font-family:
+            "Inter",
+            Arial,
+            Helvetica,
+            sans-serif;
+
+        font-size: 14px;
+
+        overflow-x: hidden;
+    }
+
+
+    a {
+        text-decoration: none;
+    }
+
+
+    button,
+    a,
+    input,
+    select,
+    textarea {
+        transition: var(--transition);
+    }
+
+
+    /* =====================================================
+       SCROLLBAR
+    ====================================================== */
+
+    ::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+
+        background: #cbd5e1;
+
+        border-radius: 20px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
+
+    /* =====================================================
+       SIDEBAR
+    ====================================================== */
+
+    .sidebar {
+
+        position: fixed;
+
+        left: 0;
+        top: 0;
+        bottom: 0;
+
+        width: var(--sidebar-width);
+
+        z-index: 1050;
+
+        display: flex;
+
+        flex-direction: column;
+
+        overflow-y: auto;
+
+        background:
+            linear-gradient(
+                180deg,
+                var(--sidebar-bg) 0%,
+                var(--sidebar-bg-2) 55%,
+                #0a101c 100%
+            );
+
+        border-right:
+            1px solid
+            rgba(255,255,255,.05);
+
+        box-shadow:
+            8px 0 30px
+            rgba(15,23,42,.10);
+
+        scrollbar-width: thin;
+
+        scrollbar-color:
+            #334155 transparent;
+    }
+
+
+    /* =====================================================
+       BRAND
+    ====================================================== */
+
+    .sidebar-brand {
+
+        min-height: 78px;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        padding: 0 20px;
+
+        color: white;
+
+        border-bottom:
+            1px solid
+            rgba(255,255,255,.06);
+
+        flex-shrink: 0;
+    }
+
+
+    .brand-icon {
+
+        width: 43px;
+        height: 43px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        flex-shrink: 0;
+
+        border-radius: 12px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+        color: white;
+
+        font-size: 21px;
+
+        box-shadow:
+            0 6px 18px
+            rgba(37,99,235,.35);
+    }
+
+
+    .brand-text {
+
+        min-width: 0;
+
+        display: flex;
+
+        flex-direction: column;
+
+        line-height: 1.15;
+    }
+
+
+    .brand-title {
+
+        color: white;
+
+        font-size: 14px;
+
+        font-weight: 800;
+
+        letter-spacing: -.25px;
+
+        white-space: nowrap;
+    }
+
+
+    .brand-subtitle {
+
+        margin-top: 5px;
+
+        color: #64748b;
+
+        font-size: 9px;
+
+        font-weight: 600;
+
+        text-transform: uppercase;
+
+        letter-spacing: 1px;
+    }
+
+
+    /* =====================================================
+       SIDEBAR NAV
+    ====================================================== */
+
+    .sidebar-nav {
+
+        flex: 1;
+
+        padding:
+            12px 10px 20px;
+    }
+
+
+    .sidebar-section-title {
+
+        padding:
+            18px 12px 8px;
+
+        color: #64748b;
+
+        font-size: 9px;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: 1.2px;
+    }
+
+
+    .sidebar .nav-link {
+
+        position: relative;
+
+        min-height: 43px;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        margin: 3px 0;
+
+        padding:
+            10px 12px;
+
+        border-radius: 10px;
+
+        color: #a8b3c5;
+
+        font-size: 12.5px;
+
+        font-weight: 500;
+    }
+
+
+    .sidebar .nav-link i {
+
+        width: 22px;
+
+        flex-shrink: 0;
+
+        color: #8290a5;
+
+        font-size: 16px;
+
+        text-align: center;
+    }
+
+
+    .sidebar .nav-link:hover {
+
+        color: white;
+
+        background:
+            rgba(255,255,255,.055);
+
+        transform:
+            translateX(2px);
+    }
+
+
+    .sidebar .nav-link:hover i {
+        color: #60a5fa;
+    }
+
+
+    .sidebar .nav-link.active {
+
+        color: white;
+
+        background:
+            linear-gradient(
+                90deg,
+                rgba(37,99,235,.95),
+                rgba(59,130,246,.72)
+            );
+
+        box-shadow:
+            0 5px 16px
+            rgba(37,99,235,.20);
+    }
+
+
+    .sidebar .nav-link.active i {
+        color: white;
+    }
+
+
+    .sidebar .nav-link.active::before {
+
+        content: "";
+
+        position: absolute;
+
+        left: -10px;
+
+        top: 8px;
+        bottom: 8px;
+
+        width: 3px;
+
+        border-radius:
+            0 4px 4px 0;
+
+        background: #60a5fa;
+    }
+
+
+    /* =====================================================
+       DISABLED NAVIGATION
+    ====================================================== */
+
+    .sidebar .nav-link.disabled-link {
+
+        color: #475569;
+
+        cursor: not-allowed;
+
+        opacity: .65;
+    }
+
+
+    .sidebar .nav-link.disabled-link i {
+        color: #475569;
+    }
+
+
+    .sidebar .nav-link.disabled-link:hover {
+
+        transform: none;
+
+        background: transparent;
+
+        color: #475569;
+    }
+
+
+    /* =====================================================
+       COMING SOON BADGE
+    ====================================================== */
+
+    .coming-soon {
+
+        margin-left: auto;
+
+        padding:
+            3px 6px;
+
+        border-radius: 5px;
+
+        background:
+            rgba(255,255,255,.06);
+
+        color: #64748b;
+
+        font-size: 8px;
+
+        font-weight: 700;
+
+        text-transform: uppercase;
+    }
+
+
+    /* =====================================================
+       SIDEBAR STATUS
+    ====================================================== */
+
+    .sidebar-footer {
+
+        margin:
+            10px 10px 15px;
+
+        padding: 14px;
+
+        border:
+            1px solid
+            rgba(255,255,255,.06);
+
+        border-radius: 12px;
+
+        background:
+            rgba(255,255,255,.035);
+
+        flex-shrink: 0;
+    }
+
+
+    .system-status {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 9px;
+
+        color: #cbd5e1;
+
+        font-size: 11px;
+
+        font-weight: 600;
+    }
+
+
+    .status-dot {
+
+        width: 8px;
+        height: 8px;
+
+        flex-shrink: 0;
+
+        border-radius: 50%;
+
+        background: #22c55e;
+
+        box-shadow:
+            0 0 0 4px
+            rgba(34,197,94,.10);
+    }
+
+
+    .system-status small {
+
+        display: block;
+
+        margin-top: 3px;
+
+        color: #64748b;
+
+        font-size: 9px;
+
+        font-weight: 500;
+    }
+
+
+    /* =====================================================
+       MAIN CONTENT
+    ====================================================== */
+
+    .main-content {
+
+        min-height: 100vh;
+
+        margin-left:
+            var(--sidebar-width);
+    }
+
+
+    /* =====================================================
+       TOP NAVBAR
+    ====================================================== */
+
+    .top-navbar {
+
+        position: sticky;
+
+        top: 0;
+
+        z-index: 1000;
+
+        min-height:
+            var(--topbar-height);
+
+        background:
+            rgba(255,255,255,.94);
+
+        backdrop-filter:
+            blur(14px);
+
+        -webkit-backdrop-filter:
+            blur(14px);
+
+        border-bottom:
+            1px solid
+            rgba(226,232,240,.9);
+
+        box-shadow:
+            0 1px 8px
+            rgba(15,23,42,.03);
+    }
+
+
+    .topbar-left {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 13px;
+    }
+
+
+    .mobile-menu-btn {
+
+        display: none;
+
+        width: 39px;
+        height: 39px;
+
+        align-items: center;
+        justify-content: center;
+
+        border:
+            1px solid
+            #e2e8f0;
+
+        border-radius: 9px;
+
+        background: white;
+
+        color: #334155;
+
+        font-size: 19px;
+    }
+
+
+    .mobile-menu-btn:hover {
+
+        background: #f8fafc;
+
+        border-color:
+            #cbd5e1;
+    }
+
+
+    .system-title {
+
+        color: var(--text-dark);
+
+        font-size: 15px;
+
+        font-weight: 750;
+
+        letter-spacing: -.2px;
+    }
+
+
+    .system-breadcrumb {
+
+        margin-top: 3px;
+
+        color: #94a3b8;
+
+        font-size: 10px;
+
+        font-weight: 500;
+    }
+
+
+    /* =====================================================
+       TOPBAR ACTIONS
+    ====================================================== */
+
+    .topbar-actions {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+    }
+
+
+    .topbar-icon-btn {
+
+        position: relative;
+
+        width: 39px;
+        height: 39px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border:
+            1px solid
+            #e5e7eb;
+
+        border-radius: 10px;
+
+        background: white;
+
+        color: #64748b;
+
+        font-size: 17px;
+    }
+
+
+    .topbar-icon-btn:hover {
+
+        color: var(--primary);
+
+        border-color: #bfdbfe;
+
+        background: #eff6ff;
+    }
+
+
+    .notification-badge {
+
+        position: absolute;
+
+        top: 5px;
+        right: 5px;
+
+        width: 8px;
+        height: 8px;
+
+        border-radius: 50%;
+
+        background: #ef4444;
+
+        border:
+            2px solid white;
+    }
+
+
+    /* =====================================================
+       USER PROFILE
+    ====================================================== */
+
+    .user-profile {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        margin-left: 5px;
+
+        padding-left: 11px;
+
+        border-left:
+            1px solid
+            #e5e7eb;
+    }
+
+
+    .user-info {
+
+        text-align: right;
+
+        line-height: 1.2;
+    }
+
+
+    .user-name {
+
+        color: var(--text-dark);
+
+        font-size: 12px;
+
+        font-weight: 700;
+    }
+
+
+    .user-role {
+
+        margin-top: 3px;
+
+        color: #94a3b8;
+
+        font-size: 9px;
+
+        font-weight: 500;
+    }
+
+
+    .user-avatar {
+
+        width: 39px;
+        height: 39px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 11px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+        color: white;
+
+        font-size: 14px;
+
+        font-weight: 800;
+
+        box-shadow:
+            0 4px 10px
+            rgba(37,99,235,.20);
+    }
+
+
+    /* =====================================================
+       PAGE CONTENT
+    ====================================================== */
+
+    .page-content {
+
+        padding: 28px;
+    }
+
+
+    /* =====================================================
+       PAGE HEADER
+    ====================================================== */
+
+    .page-header {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 20px;
+
+        margin-bottom: 25px;
+    }
+
+
+    .page-title {
+
+        margin: 0;
+
+        color: var(--text-dark);
+
+        font-size: 24px;
+
+        font-weight: 800;
+
+        letter-spacing: -.6px;
+    }
+
+
+    .page-description {
+
+        margin:
+            6px 0 0;
+
+        color: var(--text-muted);
+
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+
+    /* =====================================================
+       CARDS
+    ====================================================== */
+
+    .card {
+
+        overflow: hidden;
+
+        border:
+            1px solid
+            var(--border-color);
+
+        border-radius:
+            var(--radius-md);
+
+        background:
+            var(--card-bg);
+
+        box-shadow:
+            var(--shadow-sm);
+
+        transition:
+            box-shadow .2s ease,
+            transform .2s ease;
+    }
+
+
+    .card-hover:hover {
+
+        transform:
+            translateY(-2px);
+
+        box-shadow:
+            var(--shadow-lg);
+    }
+
+
+    .card-header {
+
+        padding:
+            16px 20px;
+
+        background: transparent;
+
+        border-bottom:
+            1px solid
+            var(--border-color);
+
+        color: var(--text-dark);
+
+        font-size: 13px;
+
+        font-weight: 700;
+    }
+
+
+    .card-body {
+        padding: 20px;
+    }
+
+
+    /* =====================================================
+       STAT CARDS
+    ====================================================== */
+
+    .stat-card {
+
+        position: relative;
+
+        overflow: hidden;
+
+        padding: 20px;
+
+        border:
+            1px solid
+            var(--border-color);
+
+        border-radius:
+            var(--radius-md);
+
+        background: white;
+
+        box-shadow:
+            var(--shadow-sm);
+
+        transition:
+            transform .2s ease,
+            box-shadow .2s ease;
+    }
+
+
+    .stat-card:hover {
+
+        transform:
+            translateY(-3px);
+
+        box-shadow:
+            var(--shadow-lg);
+    }
+
+
+    .stat-card::after {
+
+        content: "";
+
+        position: absolute;
+
+        right: -30px;
+        bottom: -30px;
+
+        width: 100px;
+        height: 100px;
+
+        border-radius: 50%;
+
+        background:
+            rgba(37,99,235,.035);
+
+        pointer-events: none;
+    }
+
+
+    .stat-card-icon {
+
+        width: 45px;
+        height: 45px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 12px;
+
+        font-size: 19px;
+    }
+
+
+    .stat-label {
+
+        margin-top: 14px;
+
+        color: var(--text-muted);
+
+        font-size: 11px;
+
+        font-weight: 600;
+
+        text-transform: uppercase;
+
+        letter-spacing: .4px;
+    }
+
+
+    .stat-value {
+
+        margin-top: 4px;
+
+        color: var(--text-dark);
+
+        font-size: 26px;
+
+        font-weight: 800;
+
+        line-height: 1.2;
+    }
+
+
+    /* =====================================================
+       TABLES
+    ====================================================== */
+
+    .table {
+
+        margin-bottom: 0;
+
+        vertical-align: middle;
+    }
+
+
+    .table thead th {
+
+        padding:
+            13px 15px;
+
+        background:
+            #f8fafc;
+
+        color:
+            #64748b;
+
+        border-bottom:
+            1px solid
+            #e2e8f0;
+
+        font-size: 10px;
+
+        font-weight: 750;
+
+        text-transform: uppercase;
+
+        letter-spacing: .5px;
+
+        white-space: nowrap;
+    }
+
+
+    .table tbody td {
+
+        padding:
+            13px 15px;
+
+        color:
+            #334155;
+
+        border-color:
+            #f1f5f9;
+
+        font-size: 12px;
+    }
+
+
+    .table tbody tr {
+
+        transition:
+            background .15s ease;
+    }
+
+
+    .table tbody tr:hover {
+
+        background:
+            #f8fafc;
+    }
+
+
+    /* =====================================================
+       BUTTONS
+    ====================================================== */
+
+    .btn {
+
+        min-height: 38px;
+
+        padding:
+            8px 13px;
+
+        border-radius: 9px;
+
+        font-size: 12px;
+
+        font-weight: 650;
+    }
+
+
+    .btn-sm {
+
+        min-height: 32px;
+
+        padding:
+            6px 10px;
+
+        font-size: 11px;
+    }
+
+
+    .btn-primary {
+
+        background:
+            var(--primary);
+
+        border-color:
+            var(--primary);
+    }
+
+
+    .btn-primary:hover {
+
+        background:
+            var(--primary-dark);
+
+        border-color:
+            var(--primary-dark);
+    }
+
+
+    /* =====================================================
+       FORMS
+    ====================================================== */
+
+    .form-control,
+    .form-select {
+
+        min-height: 42px;
+
+        border-radius: 9px;
+
+        border-color:
+            #dbe2ea;
+
+        color:
+            #334155;
+
+        font-size: 12px;
+    }
+
+
+    .form-control:focus,
+    .form-select:focus {
+
+        border-color:
+            #93c5fd;
+
+        box-shadow:
+            0 0 0 3px
+            rgba(37,99,235,.10);
+    }
+
+
+    .form-label {
+
+        margin-bottom: 7px;
+
+        color:
+            #334155;
+
+        font-size: 11px;
+
+        font-weight: 650;
+    }
+
+
+    /* =====================================================
+       BADGES
+    ====================================================== */
+
+    .badge {
+
+        padding:
+            6px 9px;
+
+        border-radius: 7px;
+
+        font-size: 9px;
+
+        font-weight: 750;
+    }
+
+
+    .badge-status {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 5px;
+    }
+
+
+    .badge-dot {
+
+        width: 6px;
+        height: 6px;
+
+        border-radius: 50%;
+    }
+
+
+    /* =====================================================
+       ALERTS
+    ====================================================== */
+
+    .alert {
+
+        border-radius: 10px;
+
+        border: 0;
+
+        box-shadow:
+            var(--shadow-sm);
+
+        font-size: 12px;
+    }
+
+
+    /* =====================================================
+       EMPTY STATE
+    ====================================================== */
+
+    .empty-state {
+
+        padding:
+            55px 20px;
+
+        text-align: center;
+
+        color: #94a3b8;
+    }
+
+
+    .empty-state i {
+
+        display: block;
+
+        margin-bottom: 12px;
+
+        font-size: 40px;
+    }
+
+
+    .empty-state h5 {
+
+        margin-bottom: 6px;
+
+        color: #64748b;
+
+        font-size: 14px;
+
+        font-weight: 700;
+    }
+
+
+    /* =====================================================
+       MOBILE OVERLAY
+    ====================================================== */
+
+    .sidebar-overlay {
+
+        display: none;
+
+        position: fixed;
+
+        inset: 0;
+
+        z-index: 1040;
+
+        background:
+            rgba(15,23,42,.50);
+
+        backdrop-filter:
+            blur(2px);
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ====================================================== */
+
+    .main-footer {
+
+        padding:
+            18px 28px 25px;
+
+        color:
+            #94a3b8;
+
+        font-size: 10px;
+
+        text-align: center;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE — TABLET
+    ====================================================== */
+
+    @media (max-width: 1100px) {
+
+        :root {
+            --sidebar-width: 245px;
+        }
+
+        .page-content {
+            padding: 22px;
+        }
+
+    }
+
+
+    /* =====================================================
+       RESPONSIVE — MOBILE
+    ====================================================== */
+
+    @media (max-width: 768px) {
+
+        .sidebar {
+
+            transform:
+                translateX(-100%);
+
+            transition:
+                transform .25s ease;
+        }
+
+
+        .sidebar.show {
+
+            transform:
+                translateX(0);
+        }
+
+
+        .sidebar-overlay.show {
+
+            display: block;
+        }
+
+
+        .main-content {
+
+            margin-left: 0;
+        }
+
+
+        .mobile-menu-btn {
+
+            display: flex;
+        }
+
+
+        .top-navbar {
+
+            padding:
+                0 15px !important;
+        }
+
+
+        .user-info {
+
+            display: none;
+        }
+
+
+        .user-profile {
+
+            padding-left: 3px;
+
+            border-left: 0;
+        }
+
+
+        .page-content {
+
+            padding: 18px;
+        }
+
+
+        .page-header {
+
+            align-items:
+                flex-start;
+
+            flex-direction:
+                column;
+        }
+
+
+        .main-footer {
+
+            padding:
+                15px 18px 20px;
+        }
+
+    }
+
+
+    /* =====================================================
+       RESPONSIVE — SMALL MOBILE
+    ====================================================== */
+
+    @media (max-width: 576px) {
+
+        .system-title {
+
+            font-size: 13px;
+        }
+
+
+        .system-breadcrumb {
+
+            display: none;
+        }
+
+
+        .topbar-icon-btn {
+
+            width: 36px;
+            height: 36px;
+        }
+
+
+        .user-avatar {
+
+            width: 36px;
+            height: 36px;
+        }
+
+
+        .page-title {
+
+            font-size: 20px;
+        }
+
+
+        .card-body {
+
+            padding: 15px;
+        }
+
+
+        .table-responsive {
+
+            overflow-x: auto;
+        }
+
+
+        .table {
+
+            min-width: 650px;
+        }
+
+    }
+
+</style>
+
+
+<!-- =========================================================
+     PAGE-SPECIFIC CSS
+========================================================== -->
+
+{% block extra_css %}
+{% endblock %}
+
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     MOBILE OVERLAY
+========================================================== -->
+
+<div class="sidebar-overlay"
+     id="sidebarOverlay">
+</div>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================== -->
+
+<aside class="sidebar"
+       id="sidebar">
+
+<!-- BRAND -->
+
+<div class="sidebar-brand">
+
+    <div class="brand-icon">
+        <i class="bi bi-shield-lock-fill"></i>
+    </div>
+
+    <div class="brand-text">
+
+        <div class="brand-title">
+            Smart Access Control
+        </div>
+
+        <div class="brand-subtitle">
+            Security Management
+        </div>
+
+    </div>
+
+</div>
+
+<!-- NAVIGATION -->
+
+<nav class="sidebar-nav">
+
+    <!-- =================================================
+         MAIN
+    ================================================== -->
+
+    <div class="sidebar-section-title">
+        Main
+    </div>
+
+    <!-- Dashboard -->
+
+    <a
+        href="{% url 'dashboard:dashboard' %}"
+        class="nav-link
+            {% if request.resolver_match.app_name == 'dashboard' %}
+                active
+            {% endif %}
+        "
+    >
+
+        <i class="bi bi-grid-1x2-fill"></i>
+
+        <span>Dashboard</span>
+
+    </a>
+
+
+    <!-- Employees -->
+
+    <a
+        href="{% url 'employees:employees' %}"
+        class="nav-link
+            {% if request.resolver_match.app_name == 'employees' %}
+                active
+            {% endif %}
+        "
+    >
+
+        <i class="bi bi-people-fill"></i>
+
+        <span>Employees</span>
+
+    </a>
+
+
+    <!-- Departments -->
+
+    <a
+        href="{% url 'departments:department_list' %}"
+        class="nav-link
+            {% if request.resolver_match.app_name == 'departments' %}
+                active
+            {% endif %}
+        "
+    >
+
+        <i class="bi bi-diagram-3-fill"></i>
+
+        <span>Departments</span>
+
+    </a>
+
+
+    <!-- Doors -->
+
+    <a
+        href="{% url 'access_control:doors' %}"
+        class="nav-link
+            {% if request.resolver_match.app_name == 'access_control' and request.resolver_match.url_name == 'doors' %}
+                active
+            {% endif %}
+        "
+    >
+
+        <i class="bi bi-door-open-fill"></i>
+
+        <span>Doors</span>
+
+    </a>
+
+
+    <!-- Attendance -->
+
+    <a
+        href="{% url 'attendance:attendance_list' %}"
+        class="nav-link
+            {% if request.resolver_match.app_name == 'attendance' %}
+                active
+            {% endif %}
+        "
+    >
+
+        <i class="bi bi-calendar2-check-fill"></i>
+
+        <span>Attendance</span>
+
+    </a>
+
+
+    <!-- =================================================
+         ACCESS MANAGEMENT
+    ================================================== -->
+
+    <div class="sidebar-section-title">
+        Access Management
+    </div>
+
+
+    <!-- Roles -->
+
+    <a
+        href="{% url 'access_control:roles' %}"
+        class="nav-link
+            {% if request.resolver_match.app_name == 'access_control' and 'role' in request.resolver_match.url_name %}
+                active
+            {% endif %}
+        "
+    >
+
+        <i class="bi bi-person-badge-fill"></i>
+
+        <span>Roles</span>
+
+    </a>
+
+
+    <!-- Permissions -->
+
+    <a
+        href="{% url 'access_control:permissions' %}"
+        class="nav-link
+            {% if request.resolver_match.app_name == 'access_control' and 'permission' in request.resolver_match.url_name %}
+                active
+            {% endif %}
+        "
+    >
+
+        <i class="bi bi-shield-lock-fill"></i>
+
+        <span>Permissions</span>
+
+    </a>
+
+
+    <!-- Access Rules -->
+
+    <a
+        href="{% url 'access_control:access_rules' %}"
+        class="nav-link
+            {% if request.resolver_match.app_name == 'access_control' and 'access_rule' in request.resolver_match.url_name %}
+                active
+            {% endif %}
+        "
+    >
+
+        <i class="bi bi-shield-check"></i>
+
+        <span>Access Rules</span>
+
+    </a>
+
+
+    <!-- =================================================
+         MONITORING
+    ================================================== -->
+
+    <div class="sidebar-section-title">
+        Monitoring
+    </div>
+
+    <!-- Access Logs  -->
+    
+	<a href="{% url 'logs:access_logs' %}"
+		class="nav-link {% if request.resolver_match.app_name == 'logs' %}active{% endif %}">
+            <i class="bi bi-journal-text"></i>
+            <span>Access Logs</span>
+    </a>
+
+    <!-- Incidents -->
+	    
+	<a href="{% url 'incidents:incident_list' %}"
+        class="nav-link {% if request.resolver_match.app_name == 'incidents' %}active{% endif %}">
+           <i class="bi bi-exclamation-triangle"></i>
+            <span> Incidents </span>
+    </a>
+	
+	<!-- Notifications -->
+    <a href="{% url 'notifications:notification_list' %}"
+        class="nav-link {% if request.resolver_match.app_name == 'notifications' %}active{% endif %}"
+        title="Notifications">
+
+            <i class="bi bi-bell"></i>
+
+            <span class="flex-grow-1">Notifications</span>
+
+            {% if sidebar_unread_notifications > 0 %}
+                <span class="badge rounded-pill bg-danger ms-auto"
+                       style="font-size: 0.7rem; min-width: 22px;"
+                       aria-label="{{ sidebar_unread_notifications }} unread notifications">
+                    {% if sidebar_unread_notifications > 99 %}
+                             99+
+                    {% else %}
+                           {{ sidebar_unread_notifications }}
+                    {% endif %}
+                </span>
+            {% endif %}
+    </a>
+	    
+   
+    <!-- =================================================
+         AUTHENTICATION
+    ================================================== -->
+
+    <div class="sidebar-section-title">
+        Authentication
+    </div>
+
+    <!-- Fingerprint -->
+
+    <a href="{% url 'fingerprints:fingerprint_list' %}"
+       class="nav-link"
+       title="Fingerprint management module">
+
+           <i class="bi bi-fingerprint"></i>
+
+           <span>Fingerprints</span>
+
+    </a>
+
+
+    <!-- RFID -->
+	
+	<a href="{% url 'rfid_cards:rfid_card_list' %}"
+        class="nav-link">
+          <i class="bi bi-credit-card-2-front"></i>
+          <span>RFID Cards</span>
+    </a>
+	
+    <!-- Face Recognition -->
+
+	<a href="{% url 'face_recognition:face_template_list' %}"
+          class="nav-link"
+          title="Face Recognition"
+    >
+        <i class="bi bi-person-bounding-box"></i>
+
+         <span>Face Recognition</span>
+    </a>
+
+    <!-- =================================================
+         SYSTEM
+    ================================================== -->
+
+    <div class="sidebar-section-title">
+        System
+    </div>
+
+
+    <!-- Devices -->
+	
+
+    <li class="nav-item">
+	    <a href="{% url 'devices:device_list' %}"
+            class="nav-link {% if request.resolver_match.app_name == 'devices' %}active{% endif %}">
+
+            <i class="bi bi-cpu-fill"></i>
+
+            <span>Devices</span>
+
+         </a>
+    </li>
+
+
+    <!-- Settings --> 
+	
+	<a href="{% url 'system_settings:home' %}"
+      class="nav-link">
+        <i class="bi bi-gear"></i>
+        <span>Settings</span>
+    </a>
+
+</nav>
+
+
+<!-- =====================================================
+     SYSTEM STATUS
+====================================================== -->
+
+<div class="sidebar-footer">
+
+    <div class="system-status">
+
+        <span class="status-dot"></span>
+
+        <div>
+
+            <div>
+                System Ready
+            </div>
+
+            <small>
+                Smart Access Control System
+            </small>
+
+        </div>
+
+    </div>
+
+</div>
+```
+
+</aside>
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================== -->
+
+<div class="main-content">
+
+
+<!-- =====================================================
+     TOP NAVBAR
+====================================================== -->
+
+<nav class="navbar top-navbar px-4">
+
+    <div class="container-fluid px-0">
+
+
+        <!-- LEFT -->
+
+        <div class="topbar-left">
+
+
+            <!-- Mobile menu -->
+
+            <button
+                type="button"
+                class="mobile-menu-btn"
+                id="mobileMenuBtn"
+                aria-label="Open navigation"
+            >
+
+                <i class="bi bi-list"></i>
+
+            </button>
+
+
+            <div>
+
+                <div class="system-title">
+                    Smart Access Control System
+                </div>
+
+                <div class="system-breadcrumb">
+                    Security &amp; Access Management
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT -->
+
+        <div class="topbar-actions">
+			
+			<!-- Notifications -->
+            <a href="{% url 'notifications:notification_list' %}"
+                 class="topbar-icon-btn"
+                 title="View notifications"
+                 aria-label="View notifications">
+
+                 <i class="bi bi-bell"></i>
+
+                {% if sidebar_unread_notifications > 0 %}
+                     <span class="notification-badge"></span>
+                {% endif %}
+            </a>
+
+
+            <!-- User -->
+
+            {% if request.user.is_authenticated %}
+
+            <div class="user-profile">
+
+                <div class="user-info">
+
+                    <div class="user-name">
+                        {{ request.user.username }}
+                    </div>
+
+                    <div class="user-role">
+                        Administrator
+                    </div>
+
+                </div>
+
+
+                <div class="user-avatar">
+
+                    {{ request.user.username|first|upper }}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- =====================================================
+     DJANGO MESSAGES
+====================================================== -->
+
+{% if messages %}
+
+    <div class="container-fluid px-4 pt-3">
+
+        {% for message in messages %}
+
+            <div
+                class="alert
+                       alert-{{ message.tags|default:'info' }}
+                       alert-dismissible
+                       fade
+                       show"
+                role="alert"
+            >
+
+                <i class="bi bi-info-circle me-2"></i>
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                ></button>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+
+<!-- =====================================================
+     PAGE CONTENT
+====================================================== -->
+
+<main class="page-content">
+
+    {% block content %}
+    {% endblock %}
+
+</main>
+
+
+<!-- =====================================================
+     FOOTER
+====================================================== -->
+
+<footer class="main-footer">
+
+    Smart Access Control System
+    <span class="mx-1">•</span>
+    Security Management Platform
+
+</footer>
+
+
+</div>
+
+<!-- =========================================================
+     BOOTSTRAP JAVASCRIPT
+========================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+<!-- =========================================================
+     SIDEBAR JAVASCRIPT
+========================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const sidebar =
+            document.getElementById("sidebar");
+
+        const overlay =
+            document.getElementById("sidebarOverlay");
+
+        const menuButton =
+            document.getElementById("mobileMenuBtn");
+
+
+        function openSidebar() {
+
+            if (!sidebar || !overlay) {
+                return;
+            }
+
+            sidebar.classList.add("show");
+
+            overlay.classList.add("show");
+
+            document.body.style.overflow =
+                "hidden";
+        }
+
+
+        function closeSidebar() {
+
+            if (!sidebar || !overlay) {
+                return;
+            }
+
+            sidebar.classList.remove("show");
+
+            overlay.classList.remove("show");
+
+            document.body.style.overflow =
+                "";
+        }
+
+
+        /* Mobile menu */
+
+        if (menuButton) {
+
+            menuButton.addEventListener(
+                "click",
+                openSidebar
+            );
+
+        }
+
+
+        /* Overlay */
+
+        if (overlay) {
+
+            overlay.addEventListener(
+                "click",
+                closeSidebar
+            );
+
+        }
+
+
+        /* Close after navigation */
+
+        document
+            .querySelectorAll(
+                ".sidebar .nav-link:not(.disabled-link)"
+            )
+            .forEach(
+                function (link) {
+
+                    link.addEventListener(
+                        "click",
+                        function () {
+
+                            if (
+                                window.innerWidth <= 768
+                            ) {
+
+                                closeSidebar();
+
+                            }
+
+                        }
+                    );
+
+                }
+            );
+
+
+        /* Close on desktop */
+
+        window.addEventListener(
+            "resize",
+            function () {
+
+                if (
+                    window.innerWidth > 768
+                ) {
+
+                    closeSidebar();
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+<!-- =========================================================
+     PAGE-SPECIFIC JAVASCRIPT
+========================================================== -->
+
+{% block extra_js %}
+{% endblock %}
+
+</body>
+
+</html>

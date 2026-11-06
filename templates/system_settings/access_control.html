@@ -1,0 +1,537 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Access Control Settings | Smart Access Control System
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1">Access Control Settings</h2>
+        <p class="text-muted mb-0">
+            Configure door access behavior, unlocking and access policies.
+        </p>
+    </div>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <!-- Status -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <h5 class="fw-bold mb-1">
+                    <i class="bi bi-shield-check text-success me-2"></i>
+                    Access Control Status
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Enable or disable access control configuration.
+                </p>
+            </div>
+
+            <div class="card-body px-4 pb-4">
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="is_active"
+                        id="is_active"
+                        {% if settings.is_active %}checked{% endif %}
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="is_active"
+                    >
+                        Access Control Settings Active
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Default Access -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white border-0 pt-4 px-4">
+
+                <h5 class="fw-bold mb-1">
+                    <i class="bi bi-door-open text-success me-2"></i>
+                    Default Access Behavior
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Define the default behavior when an access request
+                    does not match a specific rule.
+                </p>
+
+            </div>
+
+            <div class="card-body px-4 pb-4">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="default_access_behavior"
+                            class="form-label fw-semibold"
+                        >
+                            Default Access Behavior
+                        </label>
+
+                        <select
+                            class="form-select"
+                            name="default_access_behavior"
+                            id="default_access_behavior"
+                        >
+
+                            <option
+                                value="deny"
+                                {% if settings.default_access_behavior == "deny" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Deny Access
+                            </option>
+
+                            <option
+                                value="allow"
+                                {% if settings.default_access_behavior == "allow" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Allow Access
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Door Unlock -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white border-0 pt-4 px-4">
+
+                <h5 class="fw-bold mb-1">
+                    <i class="bi bi-unlock text-primary me-2"></i>
+                    Door Unlock Settings
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Configure how long doors remain unlocked.
+                </p>
+
+            </div>
+
+            <div class="card-body px-4 pb-4">
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="default_unlock_duration_seconds"
+                            class="form-label fw-semibold"
+                        >
+                            Default Unlock Duration
+                        </label>
+
+                        <div class="input-group">
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                name="default_unlock_duration_seconds"
+                                id="default_unlock_duration_seconds"
+                                min="1"
+                                max="300"
+                                value="{{ settings.default_unlock_duration_seconds }}"
+                                required
+                            >
+
+                            <span class="input-group-text">
+                                seconds
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="max_unlock_duration_seconds"
+                            class="form-label fw-semibold"
+                        >
+                            Maximum Unlock Duration
+                        </label>
+
+                        <div class="input-group">
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                name="max_unlock_duration_seconds"
+                                id="max_unlock_duration_seconds"
+                                min="1"
+                                max="600"
+                                value="{{ settings.max_unlock_duration_seconds }}"
+                                required
+                            >
+
+                            <span class="input-group-text">
+                                seconds
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="auto_lock_enabled"
+                        id="auto_lock_enabled"
+                        {% if settings.auto_lock_enabled %}checked{% endif %}
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="auto_lock_enabled"
+                    >
+                        Automatic Door Lock
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Logging -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white border-0 pt-4 px-4">
+
+                <h5 class="fw-bold mb-1">
+                    <i class="bi bi-journal-text text-info me-2"></i>
+                    Access Logging
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Configure which access events are recorded.
+                </p>
+
+            </div>
+
+            <div class="card-body px-4 pb-4">
+
+                <div class="row g-3">
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="log_successful_access"
+                                id="log_successful_access"
+                                {% if settings.log_successful_access %}checked{% endif %}
+                            >
+
+                            <label
+                                class="form-check-label"
+                                for="log_successful_access"
+                            >
+                                Log Successful Access
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="log_denied_access"
+                                id="log_denied_access"
+                                {% if settings.log_denied_access %}checked{% endif %}
+                            >
+
+                            <label
+                                class="form-check-label"
+                                for="log_denied_access"
+                            >
+                                Log Denied Access
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="log_door_events"
+                                id="log_door_events"
+                                {% if settings.log_door_events %}checked{% endif %}
+                            >
+
+                            <label
+                                class="form-check-label"
+                                for="log_door_events"
+                            >
+                                Log Door Events
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <div class="form-check form-switch">
+
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                name="access_denial_logging"
+                                id="access_denial_logging"
+                                {% if settings.access_denial_logging %}checked{% endif %}
+                            >
+
+                            <label
+                                class="form-check-label"
+                                for="access_denial_logging"
+                            >
+                                Access Denial Logging
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Working Hours -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white border-0 pt-4 px-4">
+
+                <h5 class="fw-bold mb-1">
+                    <i class="bi bi-clock text-warning me-2"></i>
+                    Working Hours
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Configure access restrictions based on working hours.
+                </p>
+
+            </div>
+
+            <div class="card-body px-4 pb-4">
+
+                <div class="form-check form-switch mb-4">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="working_hours_enabled"
+                        id="working_hours_enabled"
+                        {% if settings.working_hours_enabled %}checked{% endif %}
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="working_hours_enabled"
+                    >
+                        Enable Working Hours
+                    </label>
+
+                </div>
+
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="work_start_time"
+                            class="form-label fw-semibold"
+                        >
+                            Start Time
+                        </label>
+
+                        <input
+                            type="time"
+                            class="form-control"
+                            name="work_start_time"
+                            id="work_start_time"
+                            value="{{ settings.work_start_time|time:'H:i' }}"
+							required
+                        >
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <label
+                            for="work_end_time"
+                            class="form-label fw-semibold"
+                        >
+                            End Time
+                        </label>
+
+                        <input
+                            type="time"
+                            class="form-control"
+                            name="work_end_time"
+                            id="work_end_time"
+                            value="{{ settings.work_end_time|time:'H:i' }}"
+							required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="weekend_access_allowed"
+                        id="weekend_access_allowed"
+                        {% if settings.weekend_access_allowed %}checked{% endif %}
+                    >
+
+                    <label
+                        class="form-check-label"
+                        for="weekend_access_allowed"
+                    >
+                        Allow Weekend Access
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Notifications -->
+
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white border-0 pt-4 px-4">
+
+                <h5 class="fw-bold mb-1">
+                    <i class="bi bi-bell text-danger me-2"></i>
+                    Access Notifications
+                </h5>
+
+                <p class="text-muted mb-0">
+                    Configure notifications for denied access attempts.
+                </p>
+
+            </div>
+
+            <div class="card-body px-4 pb-4">
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="access_denied_notifications"
+                        id="access_denied_notifications"
+                        {% if settings.access_denied_notifications %}checked{% endif %}
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="access_denied_notifications"
+                    >
+                        Notify Administrators When Access Is Denied
+                    </label>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Save -->
+
+        <div class="d-flex justify-content-end mb-4">
+
+            <button
+                type="submit"
+                class="btn btn-primary px-4"
+            >
+                <i class="bi bi-check-circle me-2"></i>
+                Save Access Control Settings
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

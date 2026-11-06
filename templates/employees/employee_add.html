@@ -1,0 +1,616 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Add Employee
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- ========================================================= -->
+    <!-- PAGE HEADER -->
+    <!-- ========================================================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                Add Employee
+            </h2>
+
+            <p class="text-muted mb-0">
+                Create a new employee and access-control identity
+            </p>
+        </div>
+
+        <a href="{% url 'dashboard:employees' %}"
+           class="btn btn-secondary">
+            ← Back to Employees
+        </a>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- DJANGO MESSAGES -->
+    <!-- ========================================================= -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                 role="alert">
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- ========================================================= -->
+    <!-- FORM ERROR SUMMARY -->
+    <!-- ========================================================= -->
+
+    {% if form.errors %}
+
+        <div class="alert alert-danger">
+
+            <strong>
+                Please correct the following errors:
+            </strong>
+
+            {{ form.errors }}
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- ========================================================= -->
+    <!-- EMPLOYEE FORM -->
+    <!-- ========================================================= -->
+
+    <div class="card shadow-sm">
+
+        <div class="card-header bg-white">
+
+            <h5 class="mb-0 fw-bold">
+                Employee Information
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <form method="POST"
+                  action="{% url 'dashboard:employee_add' %}">
+
+                {% csrf_token %}
+
+
+                <!-- ================================================= -->
+                <!-- BASIC INFORMATION -->
+                <!-- ================================================= -->
+
+                <h6 class="fw-bold text-primary mb-3">
+                    Basic Information
+                </h6>
+
+
+                <div class="row">
+
+
+                    <!-- Employee Number -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label for="employee_number"
+                               class="form-label fw-semibold">
+
+                            Employee Number
+                            <span class="text-danger">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="employee_number"
+                            name="employee_number"
+                            class="form-control"
+                            value="{{ request.POST.employee_number|default:'' }}"
+                            placeholder="EMP002"
+                            maxlength="50"
+                            required
+                        >
+
+                        <small class="text-muted">
+                            Employee number must be unique.
+                        </small>
+
+                    </div>
+
+
+                    <!-- First Name -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label for="first_name"
+                               class="form-label fw-semibold">
+
+                            First Name
+                            <span class="text-danger">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="first_name"
+                            name="first_name"
+                            class="form-control"
+                            value="{{ request.POST.first_name|default:'' }}"
+                            placeholder="First name"
+                            maxlength="100"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Middle Name -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label for="middle_name"
+                               class="form-label fw-semibold">
+
+                            Middle Name
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="middle_name"
+                            name="middle_name"
+                            class="form-control"
+                            value="{{ request.POST.middle_name|default:'' }}"
+                            placeholder="Middle name"
+                            maxlength="100"
+                        >
+
+                    </div>
+
+
+                    <!-- Last Name -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label for="last_name"
+                               class="form-label fw-semibold">
+
+                            Last Name
+                            <span class="text-danger">*</span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="last_name"
+                            name="last_name"
+                            class="form-control"
+                            value="{{ request.POST.last_name|default:'' }}"
+                            placeholder="Last name"
+                            maxlength="100"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Gender -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label for="gender"
+                               class="form-label fw-semibold">
+
+                            Gender
+
+                        </label>
+
+                        <select
+                            id="gender"
+                            name="gender"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                Select gender
+                            </option>
+
+                            <option value="male"
+                                {% if request.POST.gender == "male" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Male
+                            </option>
+
+                            <option value="female"
+                                {% if request.POST.gender == "female" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Female
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Date of Birth -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label for="date_of_birth"
+                               class="form-label fw-semibold">
+
+                            Date of Birth
+
+                        </label>
+
+                        <input
+                            type="date"
+                            id="date_of_birth"
+                            name="date_of_birth"
+                            class="form-control"
+                            value="{{ request.POST.date_of_birth|default:'' }}"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- ================================================= -->
+                <!-- CONTACT INFORMATION -->
+                <!-- ================================================= -->
+
+                <h6 class="fw-bold text-primary mb-3">
+                    Contact Information
+                </h6>
+
+
+                <div class="row">
+
+
+                    <!-- Phone -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label for="phone"
+                               class="form-label fw-semibold">
+
+                            Phone
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="phone"
+                            name="phone"
+                            class="form-control"
+                            value="{{ request.POST.phone|default:'' }}"
+                            placeholder="+251 9XXXXXXXX"
+                            maxlength="30"
+                        >
+
+                    </div>
+
+
+                    <!-- Email -->
+
+                    <div class="col-md-6 mb-3">
+
+                        <label for="email"
+                               class="form-label fw-semibold">
+
+                            Email
+
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-control"
+                            value="{{ request.POST.email|default:'' }}"
+                            placeholder="employee@example.com"
+                            maxlength="150"
+                        >
+
+                    </div>
+
+
+                    <!-- Address -->
+
+                    <div class="col-md-12 mb-3">
+
+                        <label for="address"
+                               class="form-label fw-semibold">
+
+                            Address
+
+                        </label>
+
+                        <textarea
+                            id="address"
+                            name="address"
+                            class="form-control"
+                            rows="3"
+                            placeholder="Employee address"
+                        >{{ request.POST.address|default:'' }}</textarea>
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- ================================================= -->
+                <!-- EMPLOYMENT INFORMATION -->
+                <!-- ================================================= -->
+
+                <h6 class="fw-bold text-primary mb-3">
+                    Employment Information
+                </h6>
+
+
+                <div class="row">
+
+
+                    <!-- Job Title -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label for="job_title"
+                               class="form-label fw-semibold">
+
+                            Job Title
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="job_title"
+                            name="job_title"
+                            class="form-control"
+                            value="{{ request.POST.job_title|default:'' }}"
+                            placeholder="e.g. Software Engineer"
+                            maxlength="150"
+                        >
+
+                    </div>
+
+
+                    <!-- Department ID -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label for="department_id"
+                               class="form-label fw-semibold">
+
+                            Department ID
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="department_id"
+                            name="department_id"
+                            class="form-control"
+                            value="{{ request.POST.department_id|default:'' }}"
+                            placeholder="Department ID"
+                            min="1"
+                        >
+
+                        <small class="text-muted">
+                            Enter the existing department ID.
+                        </small>
+
+                    </div>
+
+
+                    <!-- Hire Date -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label for="hire_date"
+                               class="form-label fw-semibold">
+
+                            Hire Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            id="hire_date"
+                            name="hire_date"
+                            class="form-control"
+                            value="{{ request.POST.hire_date|default:'' }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label for="status"
+                               class="form-label fw-semibold">
+
+                            Status
+                            <span class="text-danger">*</span>
+
+                        </label>
+
+                        <select
+                            id="status"
+                            name="status"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="active"
+                                {% if not request.POST.status or request.POST.status == "active" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Active
+                            </option>
+
+                            <option value="inactive"
+                                {% if request.POST.status == "inactive" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Inactive
+                            </option>
+
+                            <option value="suspended"
+                                {% if request.POST.status == "suspended" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Suspended
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- ================================================= -->
+                <!-- ACCESS CONTROL INFORMATION -->
+                <!-- ================================================= -->
+
+                <h6 class="fw-bold text-primary mb-3">
+                    Access Control Information
+                </h6>
+
+
+                <div class="row">
+
+
+                    <!-- User ID -->
+
+                    <div class="col-md-4 mb-3">
+
+                        <label for="user_id"
+                               class="form-label fw-semibold">
+
+                            User ID
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="user_id"
+                            name="user_id"
+                            class="form-control"
+                            value="{{ request.POST.user_id|default:'' }}"
+                            placeholder="Optional"
+                            min="1"
+                        >
+
+                        <small class="text-muted">
+                            Can be linked later to a system user.
+                        </small>
+
+                    </div>
+
+
+                    <!-- Photo Path -->
+
+                    <div class="col-md-8 mb-3">
+
+                        <label for="photo_path"
+                               class="form-label fw-semibold">
+
+                            Photo Path
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="photo_path"
+                            name="photo_path"
+                            class="form-control"
+                            value="{{ request.POST.photo_path|default:'' }}"
+                            placeholder="Optional photo path"
+                        >
+
+                        <small class="text-muted">
+                            Photo storage will be integrated later.
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- FORM ACTIONS -->
+                <!-- ================================================= -->
+
+                <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+
+                    <a
+                        href="{% url 'dashboard:employees' %}"
+                        class="btn btn-secondary me-2"
+                    >
+                        Cancel
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        + Create Employee
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

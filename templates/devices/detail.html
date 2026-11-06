@@ -1,0 +1,334 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    {{ device.device_code }} | Devices
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Header -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                <i class="bi bi-cpu me-2"></i>
+
+                {{ device.device_code }}
+
+            </h2>
+
+            <p class="text-muted mb-0">
+                {{ device.device_name }}
+            </p>
+
+        </div>
+
+
+        <div class="d-flex gap-2">
+
+            <a href="{% url 'devices:device_edit' device.id %}"
+               class="btn btn-outline-primary">
+
+                <i class="bi bi-pencil me-1"></i>
+                Edit
+
+            </a>
+
+
+            <a href="{% url 'devices:device_list' %}"
+               class="btn btn-outline-secondary">
+
+                <i class="bi bi-arrow-left me-1"></i>
+                Back
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="row g-4">
+
+
+        <!-- Device Status -->
+
+        <div class="col-lg-4">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body text-center p-4">
+
+                    <div class="mb-3">
+
+                        <i class="bi bi-cpu"
+                           style="font-size: 70px;"></i>
+
+                    </div>
+
+
+                    <h4 class="fw-bold">
+                        {{ device.device_name }}
+                    </h4>
+
+
+                    <p class="text-muted">
+                        {{ device.device_code }}
+                    </p>
+
+
+                    {% if device.is_active %}
+
+                        <span class="badge bg-success px-3 py-2">
+
+                            <i class="bi bi-check-circle me-1"></i>
+                            Active
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-secondary px-3 py-2">
+
+                            <i class="bi bi-x-circle me-1"></i>
+                            Inactive
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Device Information -->
+
+        <div class="col-lg-8">
+
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="fw-bold mb-0">
+
+                        <i class="bi bi-info-circle me-2"></i>
+
+                        Device Information
+
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="row g-4">
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted">
+                                Device Code
+                            </small>
+
+                            <div class="fw-semibold">
+                                {{ device.device_code }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted">
+                                Device Type
+                            </small>
+
+                            <div class="fw-semibold">
+                                {{ device.device_type }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted">
+                                Location
+                            </small>
+
+                            <div class="fw-semibold">
+                                {{ device.location|default:"—" }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted">
+                                IP Address
+                            </small>
+
+                            <div class="fw-semibold">
+
+                                {% if device.ip_address %}
+                                    {{ device.ip_address }}
+                                {% else %}
+                                    —
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted">
+                                MAC Address
+                            </small>
+
+                            <div class="fw-semibold">
+
+                                {{ device.mac_address|default:"—" }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted">
+                                Firmware Version
+                            </small>
+
+                            <div class="fw-semibold">
+
+                                {{ device.firmware_version|default:"—" }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted">
+                                Last Seen
+                            </small>
+
+                            <div class="fw-semibold">
+
+                                {% if device.last_seen %}
+
+                                    {{ device.last_seen|date:"Y-m-d H:i:s" }}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        Never connected
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <small class="text-muted">
+                                Status
+                            </small>
+
+                            <div>
+
+                                {% if device.is_active %}
+
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        Inactive
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- API Status -->
+
+            <div class="card border-0 shadow-sm mt-4">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="fw-bold mb-0">
+
+                        <i class="bi bi-cloud-arrow-up me-2"></i>
+
+                        ESP32 API Connection
+
+                    </h5>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    {% if device.last_seen %}
+
+                        <div class="alert alert-success mb-0">
+
+                            <i class="bi bi-check-circle me-2"></i>
+
+                            Device has communicated with the server.
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="alert alert-warning mb-0">
+
+                            <i class="bi bi-exclamation-circle me-2"></i>
+
+                            This device has not yet communicated with the server.
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

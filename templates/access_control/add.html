@@ -1,0 +1,782 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+{% block title %}
+    {% if edit_mode %}
+        Edit Access Rule
+    {% else %}
+        Add Access Rule
+    {% endif %}
+{% endblock %}
+
+<div class="container-fluid">
+
+    <!-- =========================================================
+         PAGE HEADER
+    ========================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            
+			<h2 class="fw-bold mb-1">
+
+                {% if edit_mode %}
+
+                 <i class="bi bi-shield-check me-2"></i>
+                  Edit Access Rule
+
+                {% else %}
+
+                <i class="bi bi-shield-plus me-2"></i>
+                Add Access Rule
+
+                {% endif %}
+
+            </h2>
+		
+            <p class="text-muted mb-0">
+                Create a rule for employee access authorization.
+            </p>
+        </div>
+
+        <a href="{% url 'access_control:access_rules' %}"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Access Rules
+
+        </a>
+
+    </div>
+
+
+    <!-- =========================================================
+         FORM
+    ========================================================== -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="fw-bold mb-0">
+                <i class="bi bi-shield-lock me-2"></i>
+                Rule Configuration
+            </h5>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <!-- =================================================
+                 MESSAGES
+            ================================================== -->
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+
+                        {{ message }}
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert">
+                        </button>
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+
+            <!-- =================================================
+                 VALIDATION ERRORS
+            ================================================== -->
+
+            {% if errors %}
+
+                <div class="alert alert-danger">
+
+                    <h6 class="fw-bold">
+                        <i class="bi bi-exclamation-triangle me-1"></i>
+                        Please correct the following:
+                    </h6>
+
+                    <ul class="mb-0">
+
+                        {% for error in errors %}
+
+                            <li>{{ error }}</li>
+
+                        {% endfor %}
+
+                    </ul>
+
+                </div>
+
+            {% endif %}
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <!-- =================================================
+                     BASIC INFORMATION
+                ================================================== -->
+
+                <h6 class="fw-bold border-bottom pb-2 mb-3">
+
+                    <i class="bi bi-info-circle me-2"></i>
+                    Basic Information
+
+                </h6>
+
+
+                <div class="row g-3 mb-4">
+
+                    <!-- Rule Name -->
+
+                    <div class="col-md-6">
+
+                        <label for="name"
+                               class="form-label fw-semibold">
+
+                            Rule Name
+                            <span class="text-danger">*</span>
+
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               id="name"
+                               name="name"
+                               value="{{ form_data.name|default:'' }}"
+                               placeholder="e.g. Main Gate 24/7 Access"
+                               required>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         ACCESS TYPE
+                         IMPORTANT:
+                         Database allows only allow / deny
+                    ================================================== -->
+
+                    <div class="col-md-6">
+
+                        <label for="access_type"
+                               class="form-label fw-semibold">
+
+                            Access Type
+                            <span class="text-danger">*</span>
+
+                        </label>
+
+                        <select class="form-select"
+                                id="access_type"
+                                name="access_type"
+                                required>
+
+                            <option value="allow"
+                                {% if form_data.access_type == "allow" or not form_data %}
+                                    selected
+                                {% endif %}>
+
+                                Allow
+
+                            </option>
+
+                            <option value="deny"
+                                {% if form_data.access_type == "deny" %}
+                                    selected
+                                {% endif %}>
+
+                                Deny
+
+                            </option>
+
+                        </select>
+
+                        <div class="form-text">
+
+                            <strong>Allow</strong> grants access when the rule
+                            conditions are satisfied.
+
+                            <br>
+
+                            <strong>Deny</strong> blocks access when the rule
+                            conditions are satisfied.
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Description -->
+
+                    <div class="col-12">
+
+                        <label for="description"
+                               class="form-label fw-semibold">
+
+                            Description
+
+                        </label>
+
+                        <textarea class="form-control"
+                                  id="description"
+                                  name="description"
+                                  rows="3"
+                                  placeholder="Describe what this access rule is used for...">{{ form_data.description|default:'' }}</textarea>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     TIME SCHEDULE
+                ================================================== -->
+
+                <h6 class="fw-bold border-bottom pb-2 mb-3">
+
+                    <i class="bi bi-clock me-2"></i>
+                    Time Schedule
+
+                </h6>
+
+
+                <div class="row g-3 mb-4">
+
+                    <!-- Start Time -->
+
+                    <div class="col-md-6">
+
+                        <label for="start_time"
+                               class="form-label fw-semibold">
+
+                            Start Time
+
+                        </label>
+
+                        <input type="time"
+                               class="form-control"
+                               id="start_time"
+                               name="start_time"
+                               value="{{ form_data.start_time|default:'00:00' }}">
+
+                    </div>
+
+
+                    <!-- End Time -->
+
+                    <div class="col-md-6">
+
+                        <label for="end_time"
+                               class="form-label fw-semibold">
+
+                            End Time
+
+                        </label>
+
+                        <input type="time"
+                               class="form-control"
+                               id="end_time"
+                               name="end_time"
+                               value="{{ form_data.end_time|default:'23:59' }}">
+
+                    </div>
+
+
+                    <!-- 24/7 Option -->
+
+                    <div class="col-12">
+
+                        <div class="form-check">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   id="all_day"
+                                   name="all_day"
+                                   {% if not form_data or form_data.all_day %}
+                                       checked
+                                   {% endif %}>
+
+                            <label class="form-check-label fw-semibold"
+                                   for="all_day">
+
+                                24/7 Access
+
+                            </label>
+
+                            <div class="form-text">
+
+                                Allows access throughout the selected days.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     DAYS OF WEEK
+                ================================================== -->
+
+                <h6 class="fw-bold border-bottom pb-2 mb-3">
+
+                    <i class="bi bi-calendar-week me-2"></i>
+                    Allowed Days
+
+                </h6>
+
+
+                <div class="row g-3 mb-4">
+
+                    <!-- Monday -->
+
+                    <div class="col-md-3 col-lg">
+
+                        <div class="form-check">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   id="monday"
+                                   name="monday"
+                                   {% if not form_data or form_data.monday %}
+                                       checked
+                                   {% endif %}>
+
+                            <label class="form-check-label"
+                                   for="monday">
+
+                                Monday
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Tuesday -->
+
+                    <div class="col-md-3 col-lg">
+
+                        <div class="form-check">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   id="tuesday"
+                                   name="tuesday"
+                                   {% if not form_data or form_data.tuesday %}
+                                       checked
+                                   {% endif %}>
+
+                            <label class="form-check-label"
+                                   for="tuesday">
+
+                                Tuesday
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Wednesday -->
+
+                    <div class="col-md-3 col-lg">
+
+                        <div class="form-check">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   id="wednesday"
+                                   name="wednesday"
+                                   {% if not form_data or form_data.wednesday %}
+                                       checked
+                                   {% endif %}>
+
+                            <label class="form-check-label"
+                                   for="wednesday">
+
+                                Wednesday
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Thursday -->
+
+                    <div class="col-md-3 col-lg">
+
+                        <div class="form-check">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   id="thursday"
+                                   name="thursday"
+                                   {% if not form_data or form_data.thursday %}
+                                       checked
+                                   {% endif %}>
+
+                            <label class="form-check-label"
+                                   for="thursday">
+
+                                Thursday
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Friday -->
+
+                    <div class="col-md-3 col-lg">
+
+                        <div class="form-check">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   id="friday"
+                                   name="friday"
+                                   {% if not form_data or form_data.friday %}
+                                       checked
+                                   {% endif %}>
+
+                            <label class="form-check-label"
+                                   for="friday">
+
+                                Friday
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Saturday -->
+
+                    <div class="col-md-3 col-lg">
+
+                        <div class="form-check">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   id="saturday"
+                                   name="saturday"
+                                   {% if not form_data or form_data.saturday %}
+                                       checked
+                                   {% endif %}>
+
+                            <label class="form-check-label"
+                                   for="saturday">
+
+                                Saturday
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Sunday -->
+
+                    <div class="col-md-3 col-lg">
+
+                        <div class="form-check">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   id="sunday"
+                                   name="sunday"
+                                   {% if not form_data or form_data.sunday %}
+                                       checked
+                                   {% endif %}>
+
+                            <label class="form-check-label"
+                                   for="sunday">
+
+                                Sunday
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     VALIDITY
+                ================================================== -->
+
+                <h6 class="fw-bold border-bottom pb-2 mb-3">
+
+                    <i class="bi bi-calendar-range me-2"></i>
+                    Rule Validity
+
+                </h6>
+
+
+                <div class="row g-3 mb-4">
+
+                    <!-- Valid From -->
+
+                    <div class="col-md-6">
+
+                        <label for="valid_from"
+                               class="form-label fw-semibold">
+
+                            Valid From
+
+                        </label>
+
+                        <input type="date"
+                               class="form-control"
+                               id="valid_from"
+                               name="valid_from"
+                               value="{{ form_data.valid_from|default:'' }}">
+
+                        <div class="form-text">
+
+                            Leave empty for no starting date.
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Valid Until -->
+
+                    <div class="col-md-6">
+
+                        <label for="valid_until"
+                               class="form-label fw-semibold">
+
+                            Valid Until
+
+                        </label>
+
+                        <input type="date"
+                               class="form-control"
+                               id="valid_until"
+                               name="valid_until"
+                               value="{{ form_data.valid_until|default:'' }}">
+
+                        <div class="form-text">
+
+                            Leave empty for no expiration date.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     PRIORITY & STATUS
+                ================================================== -->
+
+                <h6 class="fw-bold border-bottom pb-2 mb-3">
+
+                    <i class="bi bi-sliders me-2"></i>
+                    Rule Settings
+
+                </h6>
+
+
+                <div class="row g-3 mb-4">
+
+                    <!-- Priority -->
+
+                    <div class="col-md-6">
+
+                        <label for="priority"
+                               class="form-label fw-semibold">
+
+                            Priority
+                            <span class="text-danger">*</span>
+
+                        </label>
+
+                        <input type="number"
+                               class="form-control"
+                               id="priority"
+                               name="priority"
+                               value="{{ form_data.priority|default:'1' }}"
+                               min="1"
+                               required>
+
+                        <div class="form-text">
+
+                            Lower numbers can be treated as higher priority.
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Active -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+
+                            Status
+
+                        </label>
+
+                        <div class="form-check form-switch mt-2">
+
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   role="switch"
+                                   id="is_active"
+                                   name="is_active"
+                                   {% if not form_data or form_data.is_active %}
+                                       checked
+                                   {% endif %}>
+
+                            <label class="form-check-label"
+                                   for="is_active">
+
+                                Active
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     SECURITY INFORMATION
+                ================================================== -->
+
+                <div class="alert alert-info">
+
+                    <div class="d-flex">
+
+                        <i class="bi bi-fingerprint fs-4 me-3"></i>
+
+                        <div>
+
+                            <strong>Fingerprint Authentication</strong>
+
+                            <p class="mb-0 mt-1">
+
+                                This access rule controls whether access is
+                                allowed or denied. When used with fingerprint
+                                authentication, the employee must have a
+                                matching fingerprint registered in the
+                                database and an active permission for the
+                                selected door.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     FORM BUTTONS
+                ================================================== -->
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+
+                    <a href="{% url 'access_control:access_rules' %}"
+                       class="btn btn-secondary">
+
+                        <i class="bi bi-x-circle me-1"></i>
+                        Cancel
+
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-primary">
+
+                        <i class="bi bi-check-circle me-1"></i>
+                        {% if edit_mode %}
+                              Update Access Rule
+                        {% else %}
+                              Create Access Rule
+                        {% endif %}
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     24/7 JAVASCRIPT
+========================================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const allDay = document.getElementById("all_day");
+
+    const startTime = document.getElementById("start_time");
+
+    const endTime = document.getElementById("end_time");
+
+
+    function updateTimeFields() {
+
+        if (allDay.checked) {
+
+            startTime.value = "00:00";
+
+            endTime.value = "23:59";
+
+        }
+
+    }
+
+
+    allDay.addEventListener("change", updateTimeFields);
+
+
+    updateTimeFields();
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,548 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Notification Settings | Smart Access Control System
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                Notification Settings
+            </h2>
+
+            <p class="text-muted mb-0">
+                Configure security, access-control, device, and system
+                notifications.
+            </p>
+        </div>
+
+        <a href="{% url 'system_settings:home' %}"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Settings
+
+        </a>
+
+    </div>
+
+
+    <form method="post">
+
+        {% csrf_token %}
+
+
+        <!-- Notification System -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-bell text-primary me-2"></i>
+                    Notification System
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="notifications_enabled"
+                        id="notifications_enabled"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="notifications_enabled">
+
+                        Enable Notifications
+
+                    </label>
+
+                    <div class="form-text">
+                        Enable the SMAC notification system.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Access Control Notifications -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-door-open text-danger me-2"></i>
+                    Access Control Notifications
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="access_denied_notifications"
+                        id="access_denied_notifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="access_denied_notifications">
+
+                        Access Denied Notifications
+
+                    </label>
+
+                    <div class="form-text">
+                        Generate a notification whenever an access attempt
+                        is denied.
+                    </div>
+
+                </div>
+
+
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="unauthorized_access_notifications"
+                        id="unauthorized_access_notifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="unauthorized_access_notifications">
+
+                        Unauthorized Access Attempts
+
+                    </label>
+
+                    <div class="form-text">
+                        Notify administrators about suspicious or
+                        unauthorized access attempts.
+                    </div>
+
+                </div>
+
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="repeated_denial_notifications"
+                        id="repeated_denial_notifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="repeated_denial_notifications">
+
+                        Repeated Access Denials
+
+                    </label>
+
+                    <div class="form-text">
+                        Generate an alert when repeated access attempts
+                        are denied.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Device Notifications -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-cpu text-warning me-2"></i>
+                    Device Notifications
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="device_offline_notifications"
+                        id="device_offline_notifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="device_offline_notifications">
+
+                        Device Offline
+
+                    </label>
+
+                    <div class="form-text">
+                        Notify administrators when a registered device
+                        becomes unavailable.
+                    </div>
+
+                </div>
+
+
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="device_online_notifications"
+                        id="device_online_notifications"
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="device_online_notifications">
+
+                        Device Back Online
+
+                    </label>
+
+                    <div class="form-text">
+                        Notify administrators when an offline device
+                        reconnects.
+                    </div>
+
+                </div>
+
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="device_error_notifications"
+                        id="device_error_notifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="device_error_notifications">
+
+                        Device Errors
+
+                    </label>
+
+                    <div class="form-text">
+                        Generate notifications when a device reports
+                        an operational error.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Biometric Notifications -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-fingerprint text-info me-2"></i>
+                    Biometric Notifications
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="biometric_failure_notifications"
+                        id="biometric_failure_notifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="biometric_failure_notifications">
+
+                        Biometric Authentication Failure
+
+                    </label>
+
+                    <div class="form-text">
+                        Notify administrators when biometric authentication
+                        repeatedly fails.
+                    </div>
+
+                </div>
+
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="biometric_enrollment_notifications"
+                        id="biometric_enrollment_notifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="biometric_enrollment_notifications">
+
+                        Biometric Enrollment Events
+
+                    </label>
+
+                    <div class="form-text">
+                        Notify administrators when biometric templates
+                        are enrolled or modified.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- System Notifications -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-exclamation-triangle text-secondary me-2"></i>
+                    System Notifications
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="system_error_notifications"
+                        id="system_error_notifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="system_error_notifications">
+
+                        System Errors
+
+                    </label>
+
+                    <div class="form-text">
+                        Notify administrators about important system errors.
+                    </div>
+
+                </div>
+
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="security_event_notifications"
+                        id="security_event_notifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="security_event_notifications">
+
+                        Security Events
+
+                    </label>
+
+                    <div class="form-text">
+                        Generate notifications for important security
+                        events recorded by the system.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Notification Delivery -->
+        <div class="card shadow-sm border-0 mb-4">
+
+            <div class="card-header bg-white">
+
+                <h5 class="mb-0 fw-bold">
+                    <i class="bi bi-send text-success me-2"></i>
+                    Notification Delivery
+                </h5>
+
+            </div>
+
+            <div class="card-body">
+
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="dashboard_notifications"
+                        id="dashboard_notifications"
+                        checked
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="dashboard_notifications">
+
+                        Dashboard Notifications
+
+                    </label>
+
+                    <div class="form-text">
+                        Display notifications inside the SMAC dashboard.
+                    </div>
+
+                </div>
+
+
+                <div class="form-check form-switch mb-3">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="email_notifications"
+                        id="email_notifications"
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="email_notifications">
+
+                        Email Notifications
+
+                    </label>
+
+                    <div class="form-text">
+                        Send selected notifications by email.
+                    </div>
+
+                </div>
+
+
+                <div class="form-check form-switch">
+
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        name="sms_notifications"
+                        id="sms_notifications"
+                    >
+
+                    <label
+                        class="form-check-label fw-semibold"
+                        for="sms_notifications">
+
+                        SMS Notifications
+
+                    </label>
+
+                    <div class="form-text">
+                        Enable SMS delivery for supported notification events.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Information -->
+        <div class="alert alert-info shadow-sm">
+
+            <div class="d-flex">
+
+                <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+
+                <div>
+
+                    <strong>Notification Configuration</strong>
+
+                    <p class="mb-0 mt-1">
+                        Notification settings determine which system events
+                        generate alerts. Delivery channels such as email and
+                        SMS require their corresponding services to be
+                        configured before they can be used.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Save -->
+        <div class="d-flex justify-content-end mb-4">
+
+            <button
+                type="submit"
+                class="btn btn-primary px-4">
+
+                <i class="bi bi-save me-1"></i>
+                Save Notification Settings
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Delete Department{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-6 col-lg-5">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-body text-center p-4">
+
+                    <!-- Warning Icon -->
+                    <div class="mb-3">
+                        <i
+                            class="bi bi-exclamation-triangle-fill text-danger"
+                            style="font-size: 3.5rem;"
+                        ></i>
+                    </div>
+
+                    <!-- Title -->
+                    <h4 class="fw-bold mb-3">
+                        Delete Department?
+                    </h4>
+
+                    <!-- Confirmation Message -->
+                    <p class="mb-2">
+                        Are you sure you want to delete
+                        <strong>{{ department.name }}</strong>?
+                    </p>
+
+                    <!-- Optional Department Code -->
+                    {% if department.code %}
+                    <p class="text-muted mb-3">
+                        Department Code:
+                        <strong>{{ department.code }}</strong>
+                    </p>
+                    {% endif %}
+
+                    <!-- Warning -->
+                    <p class="text-danger mb-4">
+                        This action cannot be undone.
+                    </p>
+
+                    <!-- Buttons -->
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <div class="d-flex justify-content-center gap-2">
+
+                            <a
+                                href="{% url 'departments:department_detail' department.id %}"
+                                class="btn btn-secondary"
+                            >
+                                <i class="bi bi-x-circle me-1"></i>
+                                Cancel
+                            </a>
+
+                            <button
+                                type="submit"
+                                class="btn btn-danger"
+                            >
+                                <i class="bi bi-trash3 me-1"></i>
+                                Delete Department
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

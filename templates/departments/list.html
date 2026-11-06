@@ -1,0 +1,758 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+Departments
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+```
+<!-- =====================================================
+     PAGE HEADER
+====================================================== -->
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2 class="fw-bold mb-1">
+            Departments
+        </h2>
+
+        <p class="text-muted mb-0">
+            Manage organizational departments and their employees.
+        </p>
+
+    </div>
+
+    <div>
+
+        <a
+            href="{% url 'departments:department_add' %}"
+            class="btn btn-primary"
+        >
+            <i class="bi bi-plus-lg me-1"></i>
+            Add Department
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SUMMARY CARDS
+====================================================== -->
+
+<div class="row g-3 mb-4">
+
+    <!-- TOTAL -->
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex align-items-center">
+
+                    <div class="me-3">
+
+                        <div
+                            class="rounded-circle bg-primary bg-opacity-10
+                                   d-flex align-items-center justify-content-center"
+                            style="width: 55px; height: 55px;"
+                        >
+
+                            <i class="bi bi-building fs-4 text-primary"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div class="text-muted small">
+                            Total Departments
+                        </div>
+
+                        <h3 class="fw-bold mb-0">
+                            {{ total_departments }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIVE -->
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex align-items-center">
+
+                    <div class="me-3">
+
+                        <div
+                            class="rounded-circle bg-success bg-opacity-10
+                                   d-flex align-items-center justify-content-center"
+                            style="width: 55px; height: 55px;"
+                        >
+
+                            <i class="bi bi-check-circle fs-4 text-success"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div class="text-muted small">
+                            Active Departments
+                        </div>
+
+                        <h3 class="fw-bold mb-0">
+                            {{ active_departments }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- INACTIVE -->
+
+    <div class="col-md-4">
+
+        <div class="card border-0 shadow-sm h-100">
+
+            <div class="card-body">
+
+                <div class="d-flex align-items-center">
+
+                    <div class="me-3">
+
+                        <div
+                            class="rounded-circle bg-secondary bg-opacity-10
+                                   d-flex align-items-center justify-content-center"
+                            style="width: 55px; height: 55px;"
+                        >
+
+                            <i class="bi bi-x-circle fs-4 text-secondary"></i>
+
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div class="text-muted small">
+                            Inactive Departments
+                        </div>
+
+                        <h3 class="fw-bold mb-0">
+                            {{ inactive_departments }}
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SEARCH AND FILTER
+====================================================== -->
+
+<div class="card border-0 shadow-sm mb-4">
+
+    <div class="card-body">
+
+        <form
+            method="get"
+            action="{% url 'departments:department_list' %}"
+        >
+
+            <div class="row g-3 align-items-end">
+
+                <!-- SEARCH -->
+
+                <div class="col-md-7">
+
+                    <label
+                        for="search"
+                        class="form-label fw-semibold"
+                    >
+                        Search
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            <i class="bi bi-search"></i>
+                        </span>
+
+                        <input
+                            type="text"
+                            name="search"
+                            id="search"
+                            class="form-control"
+                            placeholder="Search department, manager, phone or email..."
+                            value="{{ search }}"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="col-md-3">
+
+                    <label
+                        for="status"
+                        class="form-label fw-semibold"
+                    >
+                        Status
+                    </label>
+
+                    <select
+                        name="status"
+                        id="status"
+                        class="form-select"
+                    >
+
+                        <option
+                            value=""
+                            {% if selected_status == "" %}
+                                selected
+                            {% endif %}
+                        >
+                            All Departments
+                        </option>
+
+                        <option
+                            value="active"
+                            {% if selected_status == "active" %}
+                                selected
+                            {% endif %}
+                        >
+                            Active
+                        </option>
+
+                        <option
+                            value="inactive"
+                            {% if selected_status == "inactive" %}
+                                selected
+                            {% endif %}
+                        >
+                            Inactive
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- BUTTON -->
+
+                <div class="col-md-2">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary w-100"
+                    >
+
+                        <i class="bi bi-search me-1"></i>
+
+                        Search
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     DEPARTMENT TABLE
+====================================================== -->
+
+<div class="card border-0 shadow-sm">
+
+    <!-- HEADER -->
+
+    <div class="card-header bg-white py-3">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <h5 class="fw-bold mb-0">
+
+                <i class="bi bi-building me-2"></i>
+
+                Department List
+
+            </h5>
+
+            <span class="badge bg-primary">
+
+                {{ department_data|length }}
+
+                Department{{ department_data|length|pluralize }}
+
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- BODY -->
+
+    <div class="card-body p-0">
+
+        {% if department_data %}
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th class="ps-4">
+                                #
+                            </th>
+
+                            <th>
+                                Department
+                            </th>
+
+                            <th>
+                                Manager
+                            </th>
+
+                            <th>
+                                Contact
+                            </th>
+
+                            <th class="text-center">
+                                Employees
+                            </th>
+
+                            <th class="text-center">
+                                Status
+                            </th>
+
+                            <th class="text-end pe-4">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for item in department_data %}
+
+                            {% with department=item.department %}
+
+                            <tr>
+
+                                <!-- NUMBER -->
+
+                                <td class="ps-4">
+
+                                    <span class="text-muted">
+
+                                        {{ forloop.counter }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- DEPARTMENT -->
+
+                                <td>
+
+                                    <div class="d-flex align-items-center">
+
+                                        <div class="me-3">
+
+                                            <div
+                                                class="rounded-circle
+                                                       bg-primary
+                                                       bg-opacity-10
+                                                       d-flex
+                                                       align-items-center
+                                                       justify-content-center"
+                                                style="width: 42px; height: 42px;"
+                                            >
+
+                                                <i
+                                                    class="bi bi-building
+                                                           text-primary"
+                                                ></i>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div>
+
+                                            <div class="fw-semibold">
+
+                                                {{ department.name }}
+
+                                            </div>
+
+                                            {% if department.description %}
+
+                                                <small class="text-muted">
+
+                                                    {{ department.description|truncatechars:60 }}
+
+                                                </small>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- MANAGER -->
+
+                                <td>
+
+                                    {% if department.manager_name %}
+
+                                        <span class="fw-semibold">
+
+                                            {{ department.manager_name }}
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="text-muted">
+                                            —
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- CONTACT -->
+
+                                <td>
+
+                                    {% if department.phone %}
+
+                                        <div>
+
+                                            <i
+                                                class="bi bi-telephone
+                                                       me-1 text-muted"
+                                            ></i>
+
+                                            {{ department.phone }}
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    {% if department.email %}
+
+                                        <div>
+
+                                            <i
+                                                class="bi bi-envelope
+                                                       me-1 text-muted"
+                                            ></i>
+
+                                            {{ department.email }}
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    {% if not department.phone and not department.email %}
+
+                                        <span class="text-muted">
+                                            —
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- EMPLOYEE COUNT -->
+
+                                <td class="text-center">
+
+                                    <span class="badge bg-info text-dark">
+
+                                        <i class="bi bi-people me-1"></i>
+
+                                        {{ item.employee_count }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <!-- STATUS -->
+
+                                <td class="text-center">
+
+                                    {% if department.is_active %}
+
+                                        <span class="badge bg-success">
+
+                                            <i
+                                                class="bi bi-check-circle me-1"
+                                            ></i>
+
+                                            Active
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="badge bg-secondary">
+
+                                            <i
+                                                class="bi bi-x-circle me-1"
+                                            ></i>
+
+                                            Inactive
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+
+                                <!-- ACTIONS -->
+
+                                <td class="text-end pe-4">
+
+                                    <!-- VIEW -->
+
+                                    <a
+                                        href="{% url 'departments:department_detail' department.id %}"
+                                        class="btn btn-sm btn-outline-primary"
+                                        title="View Department"
+                                    >
+
+                                        <i class="bi bi-eye"></i>
+
+                                    </a>
+
+
+                                    <!-- EDIT -->
+
+                                    <a
+                                        href="{% url 'departments:department_edit' department.id %}"
+                                        class="btn btn-sm btn-outline-secondary"
+                                        title="Edit Department"
+                                    >
+
+                                        <i class="bi bi-pencil"></i>
+
+                                    </a>
+
+
+                                    <!-- STATUS -->
+
+                                    <form
+                                        method="post"
+                                        action="{% url 'departments:department_toggle_status' department.id %}"
+                                        class="d-inline"
+                                    >
+
+                                        {% csrf_token %}
+
+                                        {% if department.is_active %}
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-sm btn-outline-warning"
+                                                title="Deactivate Department"
+                                                onclick="return confirm('Deactivate this department?');"
+                                            >
+
+                                                <i class="bi bi-toggle-on"></i>
+
+                                            </button>
+
+                                        {% else %}
+
+                                            <button
+                                                type="submit"
+                                                class="btn btn-sm btn-outline-success"
+                                                title="Activate Department"
+                                                onclick="return confirm('Activate this department?');"
+                                            >
+
+                                                <i class="bi bi-toggle-off"></i>
+
+                                            </button>
+
+                                        {% endif %}
+
+                                    </form>
+
+
+                                    <!-- DELETE -->
+
+                                    <a
+                                        href="{% url 'departments:department_delete' department.id %}"
+                                        class="btn btn-sm btn-outline-danger"
+                                        title="Delete Department"
+                                    >
+
+                                        <i class="bi bi-trash"></i>
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                            {% endwith %}
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% else %}
+
+            <!-- =================================================
+                 EMPTY STATE
+            ================================================== -->
+
+            <div class="text-center py-5">
+
+                <div class="mb-3">
+
+                    <i
+                        class="bi bi-building
+                               fs-1 text-muted"
+                    ></i>
+
+                </div>
+
+
+                {% if search or selected_status %}
+
+                    <h5 class="fw-bold">
+
+                        No Matching Departments
+
+                    </h5>
+
+                    <p class="text-muted mb-3">
+
+                        No departments match your current search or filter.
+
+                    </p>
+
+                    <a
+                        href="{% url 'departments:department_list' %}"
+                        class="btn btn-outline-secondary"
+                    >
+
+                        <i class="bi bi-arrow-counterclockwise me-1"></i>
+
+                        Clear Filters
+
+                    </a>
+
+                {% else %}
+
+                    <h5 class="fw-bold">
+
+                        No Departments Found
+
+                    </h5>
+
+                    <p class="text-muted mb-3">
+
+                        There are currently no departments in the database.
+
+                    </p>
+
+                    <a
+                        href="{% url 'departments:department_add' %}"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bi bi-plus-lg me-1"></i>
+
+                        Add Department
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+```
+
+</div>
+
+{% endblock %}

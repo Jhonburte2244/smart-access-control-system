@@ -1,0 +1,361 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Door Permissions
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                Door Permissions
+            </h2>
+
+            <p class="text-muted mb-0">
+                Control which employees and roles can access doors.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'access_control:permission_add' %}"
+            class="btn btn-primary"
+        >
+            <i class="bi bi-plus-lg me-1"></i>
+            Add Permission
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         SUMMARY CARDS
+    ====================================================== -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Total Permissions
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        {{ total_permissions }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Active
+                    </div>
+
+                    <div class="fs-3 fw-bold text-success">
+                        {{ active_permissions }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Employee Permissions
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        {{ employee_permissions }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Role Permissions
+                    </div>
+
+                    <div class="fs-3 fw-bold">
+                        {{ role_permissions }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TABLE
+    ====================================================== -->
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle mb-0">
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th>ID</th>
+
+                            <th>Door</th>
+
+                            <th>Employee</th>
+
+                            <th>Role</th>
+
+                            <th>Access Rule</th>
+
+                            <th>Status</th>
+
+                            <th class="text-end">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for permission in permissions %}
+
+                        <tr>
+
+                            <td>
+                                #{{ permission.id }}
+                            </td>
+
+
+                            <td>
+
+                                <div class="fw-semibold">
+                                    {{ permission.door.name }}
+                                </div>
+
+                                <small class="text-muted">
+                                    {{ permission.door.door_code }}
+                                </small>
+
+                            </td>
+
+
+                            <td>
+
+                                {% if permission.employee %}
+
+                                    <div class="fw-semibold">
+                                        {{ permission.employee.employee_number }}
+                                    </div>
+
+                                    <small class="text-muted">
+                                        {{ permission.employee.first_name }}
+                                        {{ permission.employee.last_name }}
+                                    </small>
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if permission.role_id %}
+
+                                    {% for role in permission_roles %}
+
+                                        {% if role.id == permission.role_id %}
+                                            {{ role.name }}
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if permission.access_rule %}
+
+                                    <span class="badge bg-info-subtle text-dark">
+
+                                        {{ permission.access_rule.name }}
+
+                                    </span>
+
+                                    <br>
+
+                                    {% if permission.access_rule.access_type == "allow" %}
+
+                                        <small class="text-success">
+                                            Allow
+                                        </small>
+
+                                    {% elif permission.access_rule.access_type == "deny" %}
+
+                                        <small class="text-danger">
+                                            Deny
+                                        </small>
+
+                                    {% endif %}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        No rule
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                {% if permission.is_active %}
+
+                                    <span class="badge bg-success">
+                                        Active
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        Inactive
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td class="text-end">
+
+                                <div class="btn-group">
+
+                                    <a
+                                        href="{% url 'access_control:permission_edit' permission.id %}"
+                                        class="btn btn-sm btn-outline-primary"
+                                        title="Edit"
+                                    >
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+
+                                    <a
+                                        href="{% url 'access_control:permission_toggle_status' permission.id %}"
+                                        class="btn btn-sm btn-outline-warning"
+                                        title="Toggle Status"
+                                    >
+                                        <i class="bi bi-power"></i>
+                                    </a>
+
+
+                                    <a
+                                        href="{% url 'access_control:permission_delete' permission.id %}"
+                                        class="btn btn-sm btn-outline-danger"
+                                        title="Delete"
+                                    >
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="text-center py-5 text-muted"
+                            >
+
+                                <i class="bi bi-shield-lock fs-1 d-block mb-3"></i>
+
+                                No door permissions found.
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

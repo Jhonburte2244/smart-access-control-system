@@ -1,0 +1,578 @@
+
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    {% if edit_mode %}
+        Edit Door - Smart Access Control System
+    {% else %}
+        Add Door - Smart Access Control System
+    {% endif %}
+{% endblock %}
+
+{% block page_title %}
+    {% if edit_mode %}
+        Edit Door
+    {% else %}
+        Add Door
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                {% if edit_mode %}
+                    <i class="bi bi-pencil-square me-2"></i>
+                    Edit Door
+                {% else %}
+                    <i class="bi bi-plus-circle me-2"></i>
+                    Add Door
+                {% endif %}
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                {% if edit_mode %}
+                    Update door configuration and settings.
+                {% else %}
+                    Add a new access control door.
+                {% endif %}
+
+            </p>
+
+        </div>
+
+
+        <!-- BACK -->
+        <a href="{% url 'access_control:doors' %}"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Doors
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         DOOR FORM
+    ====================================================== -->
+    <div class="row">
+
+        <div class="col-lg-9 col-xl-8">
+
+            <div class="card shadow-sm border-0">
+
+                <!-- CARD HEADER -->
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="mb-0 fw-bold">
+
+                        {% if edit_mode %}
+                            Door Information
+                        {% else %}
+                            New Door Information
+                        {% endif %}
+
+                    </h5>
+
+                </div>
+
+
+                <!-- CARD BODY -->
+                <div class="card-body">
+
+                    <form method="post">
+
+                        {% csrf_token %}
+
+
+                        <!-- =================================================
+                             BASIC INFORMATION
+                        ================================================== -->
+
+                        <h6 class="fw-bold mb-3">
+
+                            <i class="bi bi-info-circle me-2"></i>
+                            Basic Information
+
+                        </h6>
+
+
+                        <div class="row g-3 mb-4">
+
+                            <!-- DOOR CODE -->
+                            <div class="col-md-6">
+
+                                <label for="door_code"
+                                       class="form-label fw-semibold">
+
+                                    Door Code
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="door_code"
+                                    name="door_code"
+                                    maxlength="100"
+                                    value="{% if door %}{{ door.door_code }}{% endif %}"
+                                    placeholder="Example: DR001"
+                                    required
+                                >
+
+                                <div class="form-text">
+                                    Enter a unique code for this door.
+                                </div>
+
+                            </div>
+
+
+                            <!-- DOOR NAME -->
+                            <div class="col-md-6">
+
+                                <label for="name"
+                                       class="form-label fw-semibold">
+
+                                    Door Name
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="name"
+                                    name="name"
+                                    maxlength="150"
+                                    value="{% if door %}{{ door.name }}{% endif %}"
+                                    placeholder="Example: Main Entrance"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <!-- LOCATION -->
+                            <div class="col-md-12">
+
+                                <label for="location"
+                                       class="form-label fw-semibold">
+
+                                    Location
+
+                                </label>
+
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    id="location"
+                                    name="location"
+                                    maxlength="250"
+                                    value="{% if door %}{{ door.location|default:'' }}{% endif %}"
+                                    placeholder="Example: Ground Floor - Main Entrance"
+                                >
+
+                            </div>
+
+
+                            <!-- LOCK TYPE -->
+                            <div class="col-md-6">
+
+                                <label for="lock_type"
+                                       class="form-label fw-semibold">
+
+                                    Lock Type
+
+                                </label>
+
+                                <select
+                                    class="form-select"
+                                    id="lock_type"
+                                    name="lock_type"
+                                >
+
+                                    <option value="">
+                                        Select lock type
+                                    </option>
+
+                                    <option value="Magnetic Lock"
+                                        {% if door and door.lock_type == "Magnetic Lock" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Magnetic Lock
+                                    </option>
+
+                                    <option value="Electric Strike"
+                                        {% if door and door.lock_type == "Electric Strike" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Electric Strike
+                                    </option>
+
+                                    <option value="Motor Lock"
+                                        {% if door and door.lock_type == "Motor Lock" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Motor Lock
+                                    </option>
+
+                                    <option value="Electric Lock"
+                                        {% if door and door.lock_type == "Electric Lock" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Electric Lock
+                                    </option>
+
+                                    <option value="Other"
+                                        {% if door and door.lock_type == "Other" %}
+                                            selected
+                                        {% endif %}
+                                    >
+                                        Other
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- UNLOCK DURATION -->
+                            <div class="col-md-6">
+
+                                <label for="unlock_duration_seconds"
+                                       class="form-label fw-semibold">
+
+                                    Unlock Duration
+                                    <span class="text-danger">*</span>
+
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        id="unlock_duration_seconds"
+                                        name="unlock_duration_seconds"
+                                        min="1"
+                                        max="3600"
+                                        value="{% if door %}{{ door.unlock_duration_seconds }}{% else %}5{% endif %}"
+                                        required
+                                    >
+
+                                    <span class="input-group-text">
+                                        seconds
+                                    </span>
+
+                                </div>
+
+                                <div class="form-text">
+                                    How long the door remains unlocked.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             HARDWARE SETTINGS
+                        ================================================== -->
+
+                        <hr class="my-4">
+
+                        <h6 class="fw-bold mb-3">
+
+                            <i class="bi bi-cpu me-2"></i>
+                            Hardware Settings
+
+                        </h6>
+
+
+                        <div class="row g-3 mb-4">
+
+                            <!-- SENSOR -->
+                            <div class="col-md-6">
+
+                                <div class="card border">
+
+                                    <div class="card-body">
+
+                                        <div class="form-check form-switch">
+
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                role="switch"
+                                                id="sensor_enabled"
+                                                name="sensor_enabled"
+                                                {% if not door or door.sensor_enabled %}
+                                                    checked
+                                                {% endif %}
+                                            >
+
+                                            <label
+                                                class="form-check-label fw-semibold"
+                                                for="sensor_enabled"
+                                            >
+                                                Door Sensor Enabled
+                                            </label>
+
+                                        </div>
+
+                                        <small class="text-muted d-block mt-2">
+                                            Enable monitoring of the physical
+                                            door sensor.
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- EXIT BUTTON -->
+                            <div class="col-md-6">
+
+                                <div class="card border">
+
+                                    <div class="card-body">
+
+                                        <div class="form-check form-switch">
+
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                role="switch"
+                                                id="exit_button_enabled"
+                                                name="exit_button_enabled"
+                                                {% if not door or door.exit_button_enabled %}
+                                                    checked
+                                                {% endif %}
+                                            >
+
+                                            <label
+                                                class="form-check-label fw-semibold"
+                                                for="exit_button_enabled"
+                                            >
+                                                Exit Button Enabled
+                                            </label>
+
+                                        </div>
+
+                                        <small class="text-muted d-block mt-2">
+                                            Allow the exit button to release
+                                            the door from inside.
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             STATUS
+                        ================================================== -->
+
+                        <hr class="my-4">
+
+                        <h6 class="fw-bold mb-3">
+
+                            <i class="bi bi-toggle-on me-2"></i>
+                            Door Status
+
+                        </h6>
+
+
+                        <div class="card border mb-4">
+
+                            <div class="card-body">
+
+                                <div class="form-check form-switch">
+
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        role="switch"
+                                        id="is_active"
+                                        name="is_active"
+                                        {% if not door or door.is_active %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <label
+                                        class="form-check-label fw-semibold"
+                                        for="is_active"
+                                    >
+                                        Active Door
+                                    </label>
+
+                                </div>
+
+                                <small class="text-muted d-block mt-2">
+                                    Active doors can be used by the access
+                                    control system.
+                                </small>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             FORM ACTIONS
+                        ================================================== -->
+
+                        <div class="d-flex justify-content-end gap-2">
+
+                            <a
+                                href="{% url 'access_control:doors' %}"
+                                class="btn btn-outline-secondary"
+                            >
+
+                                <i class="bi bi-x-lg me-1"></i>
+                                Cancel
+
+                            </a>
+
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+
+                                {% if edit_mode %}
+
+                                    <i class="bi bi-check-lg me-1"></i>
+                                    Update Door
+
+                                {% else %}
+
+                                    <i class="bi bi-plus-lg me-1"></i>
+                                    Add Door
+
+                                {% endif %}
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             INFORMATION PANEL
+        ====================================================== -->
+        <div class="col-lg-3 col-xl-4 mt-4 mt-lg-0">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-white py-3">
+
+                    <h6 class="mb-0 fw-bold">
+                        <i class="bi bi-lightbulb me-2"></i>
+                        Door Configuration
+                    </h6>
+
+                </div>
+
+                <div class="card-body">
+
+                    <p class="text-muted small mb-3">
+                        Configure the door identification, lock settings,
+                        hardware sensors, and operational status.
+                    </p>
+
+                    <div class="mb-3">
+
+                        <strong class="d-block">
+                            Door Code
+                        </strong>
+
+                        <small class="text-muted">
+                            Must be unique for each door.
+                        </small>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <strong class="d-block">
+                            Unlock Duration
+                        </strong>
+
+                        <small class="text-muted">
+                            Determines how many seconds the lock remains
+                            released after successful authentication.
+                        </small>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <strong class="d-block">
+                            Door Sensor
+                        </strong>
+
+                        <small class="text-muted">
+                            Used to monitor whether the physical door is
+                            open or closed.
+                        </small>
+
+                    </div>
+
+                    <div>
+
+                        <strong class="d-block">
+                            Active Status
+                        </strong>
+
+                        <small class="text-muted">
+                            Inactive doors are disabled from normal access
+                            control operations.
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

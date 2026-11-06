@@ -1,0 +1,339 @@
+```html
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    Edit Fingerprint
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+                Edit Fingerprint
+            </h2>
+
+            <p class="text-muted mb-0">
+                Update fingerprint information
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'fingerprints:fingerprint_detail' fingerprint.id %}"
+            class="btn btn-secondary"
+        >
+
+            <i class="bi bi-arrow-left"></i>
+            Back
+
+        </a>
+
+    </div>
+
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <div class="row g-3">
+
+
+                    <!-- Employee -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Employee
+                        </label>
+
+                        <select
+                            name="employee_id"
+                            class="form-select"
+                            required
+                        >
+
+                            <option value="">
+                                Select Employee
+                            </option>
+
+                            {% for employee in employees %}
+
+                                <option
+                                    value="{{ employee.id }}"
+                                    {% if employee.id == fingerprint.employee_id %}
+                                        selected
+                                    {% endif %}
+                                >
+
+                                    {{ employee.employee_number }}
+                                    -
+                                    {{ employee.first_name }}
+                                    {{ employee.middle_name }}
+                                    {{ employee.last_name }}
+
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Finger -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Finger
+                        </label>
+
+                        <select
+                            name="finger_name"
+                            class="form-select"
+                        >
+
+                            <option value="">
+                                Select Finger
+                            </option>
+
+                            {% for finger in "Left Thumb,Left Index,Left Middle,Left Ring,Left Little,Right Thumb,Right Index,Right Middle,Right Ring,Right Little".split %}
+                            {% endfor %}
+
+                            <option
+                                value="Left Thumb"
+                                {% if fingerprint.finger_name == "Left Thumb" %}selected{% endif %}
+                            >
+                                Left Thumb
+                            </option>
+
+                            <option
+                                value="Left Index"
+                                {% if fingerprint.finger_name == "Left Index" %}selected{% endif %}
+                            >
+                                Left Index
+                            </option>
+
+                            <option
+                                value="Left Middle"
+                                {% if fingerprint.finger_name == "Left Middle" %}selected{% endif %}
+                            >
+                                Left Middle
+                            </option>
+
+                            <option
+                                value="Left Ring"
+                                {% if fingerprint.finger_name == "Left Ring" %}selected{% endif %}
+                            >
+                                Left Ring
+                            </option>
+
+                            <option
+                                value="Left Little"
+                                {% if fingerprint.finger_name == "Left Little" %}selected{% endif %}
+                            >
+                                Left Little
+                            </option>
+
+                            <option
+                                value="Right Thumb"
+                                {% if fingerprint.finger_name == "Right Thumb" %}selected{% endif %}
+                            >
+                                Right Thumb
+                            </option>
+
+                            <option
+                                value="Right Index"
+                                {% if fingerprint.finger_name == "Right Index" %}selected{% endif %}
+                            >
+                                Right Index
+                            </option>
+
+                            <option
+                                value="Right Middle"
+                                {% if fingerprint.finger_name == "Right Middle" %}selected{% endif %}
+                            >
+                                Right Middle
+                            </option>
+
+                            <option
+                                value="Right Ring"
+                                {% if fingerprint.finger_name == "Right Ring" %}selected{% endif %}
+                            >
+                                Right Ring
+                            </option>
+
+                            <option
+                                value="Right Little"
+                                {% if fingerprint.finger_name == "Right Little" %}selected{% endif %}
+                            >
+                                Right Little
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Sensor -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Sensor Type
+                        </label>
+
+                        <input
+                            type="text"
+                            name="sensor_type"
+                            class="form-control"
+                            value="{{ fingerprint.sensor_type|default:'' }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Index -->
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+                            Fingerprint Index
+                        </label>
+
+                        <input
+                            type="number"
+                            name="fingerprint_index"
+                            class="form-control"
+                            value="{{ fingerprint.fingerprint_index|default:'' }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Quality -->
+
+                    <div class="col-md-3">
+
+                        <label class="form-label fw-semibold">
+                            Quality Score
+                        </label>
+
+                        <input
+                            type="number"
+                            name="quality_score"
+                            class="form-control"
+                            min="0"
+                            max="100"
+                            value="{{ fingerprint.quality_score|default:'' }}"
+                        >
+
+                    </div>
+
+
+                    <!-- Status -->
+
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Status
+                        </label>
+
+                        <select
+                            name="status"
+                            class="form-select"
+                        >
+
+                            <option
+                                value="active"
+                                {% if fingerprint.status|lower == "active" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Active
+                            </option>
+
+                            <option
+                                value="inactive"
+                                {% if fingerprint.status|lower == "inactive" %}
+                                    selected
+                                {% endif %}
+                            >
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Template -->
+
+                    <div class="col-12">
+
+                        <label class="form-label fw-semibold">
+                            Fingerprint Template
+                        </label>
+
+                        <textarea
+                            name="fingerprint_template"
+                            class="form-control"
+                            rows="8"
+                            required
+                        >{{ fingerprint.fingerprint_template }}</textarea>
+
+                        <div class="form-text">
+                            This is the biometric template, not an image.
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <div class="d-flex justify-content-end gap-2">
+
+                    <a
+                        href="{% url 'fingerprints:fingerprint_detail' fingerprint.id %}"
+                        class="btn btn-secondary"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+
+                        <i class="bi bi-save"></i>
+                        Update Fingerprint
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+```

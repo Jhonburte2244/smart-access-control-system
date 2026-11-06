@@ -1,0 +1,49 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Django local files
+staticfiles/
+media/
+*.log
+
+# Local backups and temporary files
+*.backup
+*.bak
+~$*
+
+# Database files and exports
+*.sqlite3
+*.dump
+*.sql
+
+# Local database configuration and unreviewed scripts
+Config/myproject_db.py
+DB/myproject_db.py
+DB/create_access_control_db.py
+
+# Biometric test photographs
+face_recognition/tests/*.jpg
+face_recognition/tests/*.jpeg
+face_recognition/tests/*.png
+face_recognition/tests/*.bmp
+face_recognition/tests/*.webp
+
+# Face recognition model binaries (review before publishing)
+face_recognition/models/*.onnx
+# Old source and template backups
+*_backup.py
+*_backup*.html
+
+database_models.py.utf16.backup

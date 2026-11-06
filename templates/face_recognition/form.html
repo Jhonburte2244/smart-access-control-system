@@ -1,0 +1,477 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}
+    {% if edit_mode %}
+        Edit Face Template | SMAC
+    {% else %}
+        Face Enrollment | SMAC
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                {% if edit_mode %}
+                    Edit Face Template
+                {% else %}
+                    Enroll Face
+                {% endif %}
+            </h2>
+
+            <p class="text-muted mb-0">
+                {% if edit_mode %}
+                    Update face template information
+                {% else %}
+                    Register an employee face for biometric authentication
+                {% endif %}
+            </p>
+        </div>
+
+        <a href="{% url 'face_recognition:face_template_list' %}"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Face Templates
+
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         MESSAGES
+    ====================================================== -->
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                 role="alert">
+
+                {{ message }}
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert">
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         FORM ERRORS
+    ====================================================== -->
+    {% if form.non_field_errors %}
+
+        <div class="alert alert-danger">
+
+            {% for error in form.non_field_errors %}
+                <div>{{ error }}</div>
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+
+    <div class="row justify-content-center">
+
+        <div class="col-xl-8 col-lg-10">
+
+            <div class="card shadow-sm border-0">
+
+                <!-- Card Header -->
+                <div class="card-header bg-white border-bottom py-3">
+
+                    <h5 class="mb-0 fw-bold">
+
+                        {% if edit_mode %}
+                            <i class="bi bi-pencil-square me-2"></i>
+                            Face Template Information
+                        {% else %}
+                            <i class="bi bi-person-bounding-box me-2"></i>
+                            Face Enrollment Information
+                        {% endif %}
+
+                    </h5>
+
+                </div>
+
+
+                <!-- Card Body -->
+                <div class="card-body p-4">
+
+                    <form method="post"
+                          enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+
+                        <!-- =================================================
+                             EMPLOYEE
+                        ================================================== -->
+                        <div class="mb-4">
+
+                            <label for="{{ form.employee.id_for_label }}"
+                                   class="form-label fw-semibold">
+
+                                <i class="bi bi-person me-1"></i>
+                                Employee
+
+                            </label>
+
+                            {{ form.employee }}
+
+                            {% if form.employee.help_text %}
+                                <div class="form-text">
+                                    {{ form.employee.help_text }}
+                                </div>
+                            {% endif %}
+
+                            {% for error in form.employee.errors %}
+                                <div class="text-danger small mt-1">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+
+                        </div>
+
+
+                        <!-- =================================================
+                             FACE IMAGE
+                        ================================================== -->
+                        {% if form.image %}
+
+                            <div class="mb-4">
+
+                                <label for="{{ form.image.id_for_label }}"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-camera me-1"></i>
+                                    Face Image
+
+                                </label>
+
+                                {{ form.image }}
+
+                                <div class="form-text">
+                                    Upload a clear image containing
+                                    <strong>one face only</strong>.
+                                </div>
+
+                                {% if form.image.help_text %}
+                                    <div class="form-text">
+                                        {{ form.image.help_text }}
+                                    </div>
+                                {% endif %}
+
+                                {% for error in form.image.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- =================================================
+                             IMAGE PREVIEW
+                        ================================================== -->
+                        {% if form.image %}
+
+                            <div class="mb-4">
+
+                                <div class="border rounded p-3 text-center bg-light">
+
+                                    <img id="facePreview"
+                                         src=""
+                                         alt="Face preview"
+                                         class="img-fluid rounded d-none"
+                                         style="max-height: 300px;">
+
+                                    <div id="previewPlaceholder"
+                                         class="text-muted py-5">
+
+                                        <i class="bi bi-person-bounding-box fs-1"></i>
+
+                                        <div class="mt-2">
+                                            Face image preview will appear here
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- =================================================
+                             ALGORITHM
+                        ================================================== -->
+                        {% if form.algorithm %}
+
+                            <div class="mb-4">
+
+                                <label for="{{ form.algorithm.id_for_label }}"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-cpu me-1"></i>
+                                    Recognition Algorithm
+
+                                </label>
+
+                                {{ form.algorithm }}
+
+                                {% for error in form.algorithm.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- =================================================
+                             CONFIDENCE THRESHOLD
+                        ================================================== -->
+                        {% if form.confidence_threshold %}
+
+                            <div class="mb-4">
+
+                                <label for="{{ form.confidence_threshold.id_for_label }}"
+                                       class="form-label fw-semibold">
+
+                                    <i class="bi bi-speedometer2 me-1"></i>
+                                    Confidence Threshold
+
+                                </label>
+
+                                {{ form.confidence_threshold }}
+
+                                <div class="form-text">
+                                    Recognition will use this threshold
+                                    when comparing faces.
+                                </div>
+
+                                {% for error in form.confidence_threshold.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- =================================================
+                             ACTIONS
+                        ================================================== -->
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+
+                            <a href="{% url 'face_recognition:face_template_list' %}"
+                               class="btn btn-outline-secondary">
+
+                                <i class="bi bi-x-circle me-1"></i>
+                                Cancel
+
+                            </a>
+
+
+                            <button type="submit"
+                                    class="btn btn-primary px-4">
+
+                                {% if edit_mode %}
+
+                                    <i class="bi bi-check-circle me-1"></i>
+                                    Update Face Template
+
+                                {% else %}
+
+                                    <i class="bi bi-person-plus me-1"></i>
+                                    Enroll Face
+
+                                {% endif %}
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 ENROLLMENT GUIDANCE
+            ====================================================== -->
+            {% if not edit_mode %}
+
+                <div class="card shadow-sm border-0 mt-4">
+
+                    <div class="card-body">
+
+                        <h6 class="fw-bold mb-3">
+
+                            <i class="bi bi-info-circle me-2"></i>
+                            Face Enrollment Guidelines
+
+                        </h6>
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+
+                                <ul class="mb-0">
+
+                                    <li class="mb-2">
+                                        Use a clear, good-quality image.
+                                    </li>
+
+                                    <li class="mb-2">
+                                        Only one person should appear
+                                        in the image.
+                                    </li>
+
+                                    <li class="mb-2">
+                                        Face should be clearly visible.
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <ul class="mb-0">
+
+                                    <li class="mb-2">
+                                        Avoid very dark or blurry images.
+                                    </li>
+
+                                    <li class="mb-2">
+                                        Look approximately toward the camera.
+                                    </li>
+
+                                    <li class="mb-2">
+                                        Remove heavy objects covering the face.
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     FACE IMAGE PREVIEW JAVASCRIPT
+========================================================= -->
+
+{% if form.image %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const imageInput = document.getElementById(
+        "{{ form.image.id_for_label }}"
+    );
+
+    const preview = document.getElementById(
+        "facePreview"
+    );
+
+    const placeholder = document.getElementById(
+        "previewPlaceholder"
+    );
+
+
+    if (!imageInput) {
+        return;
+    }
+
+
+    imageInput.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) {
+
+            preview.src = "";
+            preview.classList.add("d-none");
+
+            placeholder.classList.remove("d-none");
+
+            return;
+        }
+
+
+        if (!file.type.startsWith("image/")) {
+
+            preview.src = "";
+            preview.classList.add("d-none");
+
+            placeholder.classList.remove("d-none");
+
+            return;
+        }
+
+
+        const reader = new FileReader();
+
+
+        reader.onload = function (event) {
+
+            preview.src = event.target.result;
+
+            preview.classList.remove("d-none");
+
+            placeholder.classList.add("d-none");
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+    });
+
+});
+
+</script>
+
+{% endif %}
+
+{% endblock %}
